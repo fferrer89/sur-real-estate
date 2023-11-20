@@ -1,0 +1,23 @@
+<!--Section that displays a single listing from the site-->
+<main>
+    <article>
+        <h2>{{listing.location.streetAddress}}</h2>
+        <img src="../../public/uploads/{{listing.photo}}" alt="{{listing.location.streetAddress}} img">
+        <address>
+            <p>Address: {{listing.location.streetAddress}}, {{listing.location.city}}, {{listing.location.state}}, {{listing.location.zip}}</p>
+            <p>List Price: {{listing.listingPrice}}</p>
+            <p>Square Feet: {{listing.sqft}}</p>
+            <p>Number of Bedrooms: {{listing.numBeds}}</p>
+            <p>Number of Bathrooms: {{listing.numBaths}}</p>
+            <p>Includes Garage: {{listing.hasGarage}}</p>
+            <p>Includes Terrace: {{listing.hasTerrace}}</p>
+        </address>
+    </article>
+    <!--Dashboard with info here-->
+</main>
+<aside>
+    <!--Make a Deposit form here-->
+    <!--Book an onsite visit form here-->
+    <!--Comments here-->
+    <!--Messages here-->
+</aside>

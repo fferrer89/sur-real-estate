@@ -1,0 +1,22 @@
+<!--Section that displays all the real estate listings in the site-->
+<main>
+    <p>Real estate listings available for sale</p>
+    <h2>Listings</h2>
+    <search>
+        <!--Search fields here-->
+    </search>
+    <a href="/listings/new">Create Property</a>
+    {{#each listings}}
+        <!--Iterate over each listing-->
+        <article>
+            <!--A specific listing-->
+            <h3>
+                <a href="/listings/{{_id}}">{{location.streetAddress}}</a>
+            </h3>
+            <img src="../../public/uploads/{{photo}}" alt="{{location.streetAddress}} img">
+        </article>
+    {{/each}}
+</main>
+<aside>
+    <!--Map with properties here-->
+</aside>

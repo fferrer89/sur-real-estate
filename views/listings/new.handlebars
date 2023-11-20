@@ -1,0 +1,57 @@
+<main>
+    <!--Create an HTML form that allows users to select a file and upload it locally. The form will be submitted using
+    the POST method and will have an encoding type of "multipart/form-data" to handle file upload.-->
+    <form action="/listings" method="post" enctype="multipart/form-data">
+        <!--'enctype' enctype: Specifies the content type used to submit the form data. For file uploads, you need to
+        set the enctype attribute to "multipart/form-data". This encoding type is necessary for browsers to properly
+        handle file uploads.-->
+        <fieldset>
+            <legend>Address Information</legend>
+            <label>Street Address
+                <input type="text"  name="streetAddress" placeholder="Enter listing street address">
+            </label>
+            <label>Zip Code
+                <input type="text"  name="zip" placeholder="Enter listing zip code">
+            </label>
+            <label>City
+                <input type="text"  name="city" placeholder="Enter listing city">
+            </label>
+            <label>State
+                <input type="text"  name="state" placeholder="Enter listing state">
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>General Info</legend>
+            <label>Listing Price
+                <input type="number"  name="listingPrice" placeholder="Enter listing Price">
+            </label>
+            <br>
+            <label>Square Feet
+                <input type="number"  name="sqft" placeholder="Enter listing Square Feet">
+            </label>
+            <br>
+            <label>Number of Bedrooms
+                <input type="number"  name="numBeds" placeholder="Enter listing Number of Bedrooms">
+            </label>
+            <br>
+            <label>Number of Bathrooms
+                <input type="number"  name="numBaths" placeholder="Enter listing Number of Bathrooms">
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Amenities</legend>
+            <label>Select Amenities
+                <input type="checkbox" name="hasGarage" value="true"> Garage
+                <input type="checkbox" name="hasTerrace" value="true"> Terrace
+            </label>
+        </fieldset>
+        <label>Upload Photo
+            <input type="file" name="file" accept="image/*">
+            <!--'name' attribute: Used so that the input data can be identified when the form is submitted.-->
+        </label>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</main>
