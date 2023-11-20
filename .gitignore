@@ -1,8 +1,8 @@
 ## Express and Node files and folders to ignore
 # Add here any file to be ignore by git commits
 node_modules/
+public/uploads
 package-lock.json
-/public/uploads
 
 ## MacOS files and folders to ignore
 # Desktop Services Store file is a macOS specific file that stores custom attributes/metadata, such as folder view
