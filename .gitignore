@@ -1,0 +1,4 @@
+# Add here any file to be ignore by git commits
+node_modules/
+package-lock.json
+/public/uploads
