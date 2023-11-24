@@ -17,7 +17,7 @@ const broadwayListingLocation= {
 };
 let photoBroadwayListing = 'broadway-apt-test.jpg';
 const broadwayListingId = await listingData.createListing(444, broadwayListingLocation, 4, 3,
-    444, true, true, photoBroadwayListing);
+    444, photoBroadwayListing, true, false);
 console.log(await listingData.getListing((broadwayListingId)));
 
 
@@ -32,10 +32,29 @@ const mainStListingLocation= {
 };
 let photoMainStListing = 'main-st-house-test.jpg';
 const mainStListingId = await listingData.createListing(5555, mainStListingLocation, 2, 1,
-    133, false, false, photoMainStListing);
+    133, photoMainStListing, true, false);
 console.log(await listingData.getListing((mainStListingId)));
 
+const centralAvnListingLocation= {
+    streetAddress: 'Central Avn',
+    number: 44,
+    zip: '66656',
+    state: 'IL',
+    city: 'Chicago',
+    longitude: '1028ey190e0',
+    latitude: '102y9e129yde'
+};
+const centralAvnListingId = await listingData.createListing(5557, centralAvnListingLocation, 3, 1,
+    55, photoMainStListing, true, true);
+console.log(await listingData.getListing((centralAvnListingId)));
+
+console.log('\nGetting all listings......');
 console.log(await listingData.getAllListings());
+
+console.log('\nGetting specific listings.....');
+console.log(await listingData.getListings(444, 5555, 133, 444,
+    0, 0, true, false));
+
 
 console.log('Done seeding database');
 await closeConnection();

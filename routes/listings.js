@@ -1,5 +1,6 @@
 import {Router} from "express";
 import {listingData} from '../data/index.js'
+import validations from "../validate.js";
 
 /**
  *  Module to set up the Multer middleware.
@@ -75,9 +76,65 @@ listingRouter.route('/')
      * GET request to http://localhost:3000/listings/
      */
     .get(async (req, res) => {
-        const listings = await listingData.getAllListings();
+        let queryParams = req.query;
+        let listings;
+        if (Object.keys(queryParams).length === 0 ) {
+            try {
+                listings = await listingData.getAllListings();
+            } catch (e) {
+                return res.status(500).json({error: e});
+            }
+        } else {
+            const QUERY_PARAMS = ['minPrice', 'maxPrice', 'minSqft', 'maxSqft', 'minNumBeds', 'minNumBaths',
+            'hasGarage', 'hasTerrace'];
+            let invalidMessages = [];
+            Object.entries(queryParams).forEach(([key, value]) => {
+                // Validate that the URL does not have non-valid query parameters
+                if (!QUERY_PARAMS.includes(key)) {
+                    invalidMessages.push(`${key} is not a valid query parameter`);
+                }
+                // Validate that the URL does not have duplicate query parameters
+                if (value instanceof Array) {
+                    invalidMessages.push(`Remove duplicate ${key} query parameter`);
+                }
+            })
+            if (invalidMessages.length > 0) {
+                return res.status(400).json({errors: invalidMessages});
+            }
+            // Retrieve each query parameters value
+            let listingPriceParams, listingSqftParams;
+            // Validations:
+            try {
+                listingPriceParams = validations.listingPriceRange(parseInt(queryParams.minPrice),
+                    parseInt(queryParams.maxPrice));
+                listingSqftParams = validations.listingSqftRange(parseInt(queryParams.minSqft),
+                    parseInt(queryParams.maxSqft));
+                queryParams.minNumBeds = validations.numberCheck('minNumBeds', parseInt(queryParams.minNumBeds), false);
+                queryParams.minNumBaths = validations.numberCheck('minNumBaths', parseInt(queryParams.minNumBaths), false);
+                // Garage and Terrace are optional parameters
+                if (queryParams.hasGarage) {
+                    queryParams.hasGarage = validations.booleanStringCheck('hasGarage', queryParams.hasGarage);
+                }
+                if (queryParams.hasTerrace) {
+                    queryParams.hasTerrace = validations.booleanStringCheck('hasTerrace', queryParams.hasTerrace);
+                }
+            } catch (e) {
+                return res.status(400).json({error: e.message});
+            }
+            try {
+                listings = await listingData.getListings(listingPriceParams.minPrice,
+                    listingPriceParams.maxPrice, listingSqftParams.minSqft, listingSqftParams.maxSqft,
+                    queryParams.minNumBeds, queryParams.minNumBaths,
+                    queryParams.hasGarage, queryParams.hasTerrace);
+            } catch (e) {
+                return res.status(500).json({error: e});
+            }
+        }
         // Retrieve all the listings
-        res.render('listings/index', {listings: listings});
+        return res.render('listings/index', {
+            listings: listings,
+            scriptFiles: ['get-listings-form']
+        });
     })
 
     /**
@@ -117,7 +174,7 @@ listingRouter.route('/:listingId')
      */
     .get(async (req, res) => {
         let listingId = req.params.listingId
-        const listing = await listingData.getListingById(listingId);
+        const listing = await listingData.getListing(listingId);
         // Retrieve all the listings
         res.render('listings/single', {listing: listing});
     });

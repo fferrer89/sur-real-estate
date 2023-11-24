@@ -1,6 +1,72 @@
 import { ObjectId } from "mongodb";
 
-const validateMethods = {
+const validations = {
+  numberCheck(numberVariableName, numberVal, canBeNegative=true) {
+    if (numberVal === undefined) {
+      throw new TypeError(`${numberVariableName} must be provided`);
+    }
+    if (typeof numberVal !== 'number' || isNaN(numberVal) || !isFinite(numberVal)) {
+      throw new TypeError(`${numberVariableName} must be a number`);
+    }
+    if (numberVal < 0 && (!canBeNegative)) {
+      throw new RangeError(`${numberVariableName} cannot be a negative number`);
+    }
+    return numberVal;
+  },
+  listingPriceRange(minPriceVal, maxPriceVal) {
+      let minPrice = this.numberCheck('minPrice', minPriceVal, false);
+      let maxPrice = this.numberCheck('maxPrice', maxPriceVal, false);
+      if (minPrice > maxPrice) {
+        throw new RangeError(`minPrice must be smaller or equal to maxPrice`);
+      }
+      return {minPrice, maxPrice};
+  },
+  listingSqftRange(minSqftVal, maxSqftVal) {
+    let minSqft = this.numberCheck('minSqft', minSqftVal, false);
+    let maxSqft = this.numberCheck('maxSqft', maxSqftVal, false);
+    if (minSqft > maxSqft) {
+      throw new RangeError(`minSqft must be smaller or equal to maxSqft`);
+    }
+    return {minSqft, maxSqft};
+  },
+
+  booleanCheck(booleanVariableName, booleanVal) {
+    if (booleanVal === undefined) {
+      throw new TypeError(`${booleanVariableName} must be provided`);
+    }
+    if (typeof booleanVal != 'boolean') {
+      throw new TypeError(`${booleanVariableName} must be a boolean (true or false)`);
+    }
+    return booleanVal;
+  },
+  booleanStringCheck(booleanVariableName, booleanVal) {
+    if (booleanVal === undefined) {
+      throw new TypeError(`${booleanVariableName} must be provided`);
+    }
+    if (typeof booleanVal !== 'string') {
+      throw new TypeError(`${booleanVariableName} must be a string`);
+    }
+    booleanVal = booleanVal.trim();
+    if (!(booleanVal === 'true' || booleanVal === 'false')) {
+      throw new TypeError(`Value of ${booleanVariableName} must be either true or false)`);
+    }
+    return booleanVal === 'true';
+  },
+
+  isRequired: (varName) => {
+    throw new TypeError(`${varName} is required`)
+  },
+  numOfArgumentsCheck(functionName, numOfArguments, min, max) {
+    if (numOfArguments.length < min || numOfArguments.length > max) {
+      if (min === max) {
+        throw new RangeError(`${functionName} must have exactly ${min} argument`);
+      } else {
+        throw new RangeError(`${functionName} must have between ${min} and ${max} arguments`);
+      }
+    }
+  },
+
+
   verifyId(id) {
     if (!id) throw new Error("Please provide an Id for the search");
     if (typeof id !== "string") throw new Error("Id provided must be a string");
@@ -170,4 +236,4 @@ const validateMethods = {
   },
 };
 
-export default validateMethods;
+export default validations;
