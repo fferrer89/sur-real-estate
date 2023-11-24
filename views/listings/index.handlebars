@@ -1,40 +1,44 @@
 <!--Section that displays all the real estate listings in the site-->
 <main>
-    <p>Real estate listings available for sale</p>
-    <h2>Listings</h2>
-    <search>
-        <!--Search fields here-->
-        <form action="/listings"  method="get" id="get-listing-form">
-            <fieldset>
-                <legend>General Info</legend>
-                <fieldset class="min-max-range">
-                    <legend>Price Range</legend>
-                    <label>Minimum
-                        <input type="number" name="minPrice" id="minPrice" value="0" min="0" max="10000000" required>
-                    </label>
-                    <label>Maximum
-                        <input type="number" name="maxPrice" id="maxPrice" value="100000" min="0" max="10000000" required>
-                    </label>
-                </fieldset>
-                <fieldset class="min-max-range">
-                    <legend>Square Feet Range</legend>
-                    <label>Minimum
-                        <input type="number" name="minSqft" id="minSqft" value="0" min="0" max="100000" required>
-                    </label>
-                    <label>Maximum
-                        <input type="number" name="maxSqft" id="maxSqft" value="100000" min="0" max="100000" required>
-                    </label>
-                </fieldset>
-            <label>Number of Bedrooms
-                <select name="minNumBeds" required>
-                    <option value="0">Any</option>
-                    <option value="1">1+</option>
-                    <option value="2">2+</option>
-                    <option value="3">3+</option>
-                    <option value="4">4+</option>
-                </select>
-            </label>
-                <label>Number of Bathrooms
+    <header id="home-header">
+        <search>
+            <!--Search fields here-->
+            <form action="/listings" method="get" id="get-listing-form">
+                <details>
+                    <summary>Price Range</summary>
+                    <fieldset class="min-max-range">
+                        <label>Min
+                            <input type="number" name="minPrice" id="minPrice" value="0" min="0" max="10000000"
+                                   required>
+                        </label>
+                        <label>Max
+                            <input type="number" name="maxPrice" id="maxPrice" value="100000" min="0" max="10000000"
+                                   required>
+                        </label>
+                    </fieldset>
+                </details>
+                <details>
+                    <summary>Square Feet Range</summary>
+                    <fieldset class="min-max-range">
+                        <label>Min
+                            <input type="number" name="minSqft" id="minSqft" value="0" min="0" max="100000" required>
+                        </label>
+                        <label>Max
+                            <input type="number" name="maxSqft" id="maxSqft" value="100000" min="0" max="100000"
+                                   required>
+                        </label>
+                    </fieldset>
+                </details>
+                <label>Bedrooms
+                    <select name="minNumBeds" required>
+                        <option value="0">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                    </select>
+                </label>
+                <label>Bathrooms
                     <select name="minNumBaths" required>
                         <option value="0">Any</option>
                         <option value="1">1+</option>
@@ -43,21 +47,25 @@
                         <option value="4">4+</option>
                     </select>
                 </label>
-            </fieldset>
-            <fieldset>
-                <legend>Amenities</legend>
-                <label>Select Amenities
-                    <input type="checkbox" name="hasGarage" value="true"> Garage
-                    <input type="checkbox" name="hasTerrace" value="true"> Terrace
-                </label>
-            </fieldset>
-            <br>
-            <button type="submit">Search Properties</button>
-            <button type="reset">Reset</button>
-        </form>
-    </search>
-    <a href="/listings/new">Create Property</a>
-    <!--Check if the listings variable has data. If not, return a non-listings message-->
+                <details>
+                    <summary>Amenities</summary>
+                    <fieldset>
+                        <label> Garage
+                            <input type="checkbox" name="hasGarage" value="true">
+                        </label>
+                        <br>
+                        <label> Terrace
+                            <input type="checkbox" name="hasTerrace" value="true">
+                        </label>
+                    </fieldset>
+                </details>
+                <button type="submit">Search</button>
+            </form>
+        </search>
+        <a href="/listings/new" class="nav-button">Create Property</a>
+        <!--Check if the listings variable has data. If not, return a non-listings message-->
+    </header>
+    <section id="listings-grid">
     {{#if listings}}
         {{#each listings}}
             <!--Iterate over each listing-->
@@ -69,11 +77,12 @@
                 <img src="../../public/uploads/{{photo}}" alt="{{location.streetAddress}} img">
             </article>
         {{/each}}
-        {{else}}
+    {{else}}
         <p>No listing found. Please adjust filter criteria.</p>
     {{/if}}
-
+    </section>
+    <aside>
+        <!-- Insert the map here-->
+<!--        <img src="../../public/images/map-placeholder-test.png" alt="Map Placeholder">-->
+    </aside>
 </main>
-<aside>
-    <!--Map with properties here-->
-</aside>

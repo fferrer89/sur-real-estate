@@ -1,0 +1,49 @@
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+}
+search {
+    padding: 6px;
+    display: inline-block;
+    border-style: solid;
+    border-width: thin;
+    border-radius: 5px;
+}
+.nav-button {
+    padding: 6px;
+    border-style: solid;
+    border-color: black;
+    border-width: thin;
+    border-radius: 5px;
+}
+
+
+
+details {
+    display: inline-block;
+}
+form details, form label {
+    /* All 'details' elements that are contained inside a 'form' element AND
+    All 'label' elements that are contained inside a 'form' element */
+    margin-right: 10px;
+}
+
+
+#listings-grid {
+    margin: 20px 40% 20px 20px;
+    display: flex;
+    justify-content: start;
+    justify-items: stretch;
+    flex-wrap: wrap;
+    gap: 2%
+
+}
+
+#listings-grid article {
+    border-style: solid;
+    padding: 5px;
+    border-width: thin;
+}
