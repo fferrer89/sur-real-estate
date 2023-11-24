@@ -3,7 +3,7 @@
  */
 import { ObjectId } from "mongodb";
 import {listings} from "../config/mongoCollections.js";
-import validate from "../validate.js";
+import validations from "../validate.js";
 
 const listingData = {
   async createListing(
@@ -12,9 +12,10 @@ const listingData = {
     numBeds,
     numBaths,
     sqft,
-    hasGarage = false,
-    hasTerrace = false,
-    photo
+    photo,
+    hasGarage, // optional
+    hasTerrace, // optional
+
   ) {
     listingPrice = validate.verifyPrice(listingPrice);
     location = validate.verifyLocation(location);
@@ -25,14 +26,18 @@ const listingData = {
       numBeds,
       numBaths,
       sqft,
-      hasGarage,
-      hasTerrace,
       photo,
       listingVisitor: [],
       comments: [],
       deposit: [],
       pastListings: [],
     };
+    if (hasGarage !== undefined) {
+      newListing.hasGarage = hasGarage;
+    }
+    if (hasTerrace !== undefined) {
+      newListing.hasTerrace = hasTerrace;
+    }
 
     const listingCollection = await listings();
     const listingInfo = await listingCollection.insertOne(newListing);
@@ -44,7 +49,7 @@ const listingData = {
     return listingId.toString();
   },
 
-  async getListingById(listingId) {
+  async getListing(listingId) {
     // listingId = validate.verifyId(listingId);
     const listingCollection = await listings();
     const listing = await listingCollection.findOne({
@@ -60,6 +65,42 @@ const listingData = {
     if (!listingsArr) throw new Error('Could not get all listings');
     return listingsArr;
   },
+
+  async getListings(
+      minPrice = validations.isRequired('minPrice'),
+      maxPrice = validations.isRequired('maxPrice'),
+      minSqft = validations.isRequired('minSqft'),
+      maxSqft = validations.isRequired('maxSqft'),
+      minNumBeds = validations.isRequired('minNumBeds'),
+      minNumBaths = validations.isRequired('minNumBaths'),
+      hasGarage = false,
+      hasTerrace = false
+  ) {
+    // Validations
+    validations.numOfArgumentsCheck('getListings()', arguments.length, 8, 8); // Check whether this function
+    ({minPrice, maxPrice} = validations.listingPriceRange(minPrice, maxPrice));
+    ({minSqft, maxSqft} = validations.listingSqftRange(minSqft, maxSqft));
+    minNumBeds = validations.numberCheck('minNumBeds', minNumBeds, false);
+    minNumBaths = validations.numberCheck('minNumBaths', minNumBaths, false);
+    // Garage and Terrace are optional parameters with a default value of 'false'
+    hasGarage = validations.booleanCheck('hasGarage', hasGarage);
+    hasTerrace = validations.booleanCheck('hasTerrace', hasTerrace);
+    const listingCollection = await listings();
+    const listingsCol = await listingCollection.find(
+        {
+          $and: [
+            {listingPrice: {$gte: minPrice}},
+            {listingPrice: {$lte: maxPrice}},
+            {sqft: {$gte: minSqft}},
+            {sqft: {$lte: maxSqft}},
+            {numBeds: {$gte: minNumBeds}},
+            {numBaths: {$gte: minNumBaths}},
+            {hasGarage: hasGarage},
+            {hasTerrace: hasTerrace}
+          ]
+        }).toArray();
+    return listingsCol;
+  }
 
   // async removeListing(listingId) {
   //   listingId = validate.verifyId(listingId);

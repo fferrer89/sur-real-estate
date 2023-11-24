@@ -3,7 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/stylesheets/main.css"> <!--Link to the stylesheet (css) file used by this HTML file-->
+    <link rel="stylesheet" href="../../public/stylesheets/main.css">
+    {{#if scriptFiles}}
+        {{#each scriptFiles}}
+            <script src="../../public/scripts/{{this}}.js" async></script>
+        {{/each}}
+    {{/if}}
     <title>SurReal Estate</title>
     <meta name="description" content="The main template for the SurReal Estate app">
 </head>

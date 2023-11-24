@@ -4,18 +4,75 @@
     <h2>Listings</h2>
     <search>
         <!--Search fields here-->
+        <form action="/listings"  method="get" id="get-listing-form">
+            <fieldset>
+                <legend>General Info</legend>
+                <fieldset class="min-max-range">
+                    <legend>Price Range</legend>
+                    <label>Minimum
+                        <input type="number" name="minPrice" id="minPrice" value="0" min="0" max="10000000" required>
+                    </label>
+                    <label>Maximum
+                        <input type="number" name="maxPrice" id="maxPrice" value="100000" min="0" max="10000000" required>
+                    </label>
+                </fieldset>
+                <fieldset class="min-max-range">
+                    <legend>Square Feet Range</legend>
+                    <label>Minimum
+                        <input type="number" name="minSqft" id="minSqft" value="0" min="0" max="100000" required>
+                    </label>
+                    <label>Maximum
+                        <input type="number" name="maxSqft" id="maxSqft" value="100000" min="0" max="100000" required>
+                    </label>
+                </fieldset>
+            <label>Number of Bedrooms
+                <select name="minNumBeds" required>
+                    <option value="0">Any</option>
+                    <option value="1">1+</option>
+                    <option value="2">2+</option>
+                    <option value="3">3+</option>
+                    <option value="4">4+</option>
+                </select>
+            </label>
+                <label>Number of Bathrooms
+                    <select name="minNumBaths" required>
+                        <option value="0">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                    </select>
+                </label>
+            </fieldset>
+            <fieldset>
+                <legend>Amenities</legend>
+                <label>Select Amenities
+                    <input type="checkbox" name="hasGarage" value="true"> Garage
+                    <input type="checkbox" name="hasTerrace" value="true"> Terrace
+                </label>
+            </fieldset>
+            <br>
+            <button type="submit">Search Properties</button>
+            <button type="reset">Reset</button>
+        </form>
     </search>
     <a href="/listings/new">Create Property</a>
-    {{#each listings}}
-        <!--Iterate over each listing-->
-        <article>
-            <!--A specific listing-->
-            <h3>
-                <a href="/listings/{{_id}}">{{location.streetAddress}}</a>
-            </h3>
-            <img src="../../public/uploads/{{photo}}" alt="{{location.streetAddress}} img">
-        </article>
-    {{/each}}
+    <!--Check if the listings variable has data. If not, return a non-listings message-->
+    {{#if listings}}
+        {{#each listings}}
+            <!--Iterate over each listing-->
+            <article>
+                <!--A specific listing-->
+                <h3>
+                    <a href="/listings/{{_id}}">{{location.streetAddress}}</a>
+                </h3>
+                <img src="../../public/uploads/{{photo}}" alt="{{location.streetAddress}} img">
+            </article>
+        {{/each}}
+        {{else}}
+        <p>No listing found. Please adjust filter criteria.</p>
+    {{/if}}
+
 </main>
 <aside>
     <!--Map with properties here-->

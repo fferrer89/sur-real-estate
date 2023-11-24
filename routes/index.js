@@ -4,7 +4,6 @@
 import userRouter from './users.js';
 import listingRouter from './listings.js';
 import messageRouter from './messages.js';
-import imageRouter from './images.js';
 
 /**
  * Constructor that adds the userRouter, listingRouter, and messageRouter Routers, which contain our route-handling code,
@@ -35,13 +34,10 @@ const routesConstructor = (app) => {
      */
     app.use('/messages', messageRouter); // '/attendees' -> The resource URL
 
+
     /**
-     * Only requests to /images/* will be sent to the messageRouter "router". This will only be invoked if the path starts
-     * with /images from the mount point (http://localhost:3000/images)
+     * The Home page of this application
      */
-    app.use('/images', imageRouter); // '/attendees' -> The resource URL
-
-
     app.use('/', (req, res) => {
         res.redirect('/listings');
     })
