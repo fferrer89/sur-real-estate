@@ -68,12 +68,19 @@ const imageUpload = multer({
 
 const listingRouter = Router(); // Creates a listingRouter object
 
-listingRouter.route('/new').get(async (req, res) => {
-    res.render('listings/new');
-});
+/**
+ * Route that handles HTTP requests (now only GET) to the http://localhost:3000/listings endpoint URL.
+ */
 listingRouter.route('/')
     /**
-     * GET request to http://localhost:3000/listings/
+     * Route that receives get requests from http://localhost:3000/listings endpoint URL, which renders to the
+     * user/browser the Home Page with all the listings. This routes also handle request (Form requests) with Query
+     * Parameters to search properties with specific characteristics
+     *
+     * HTML Form Request: "<form action="/listings" method="get" id="get-listing-form">
+     *
+     * GET request to http://localhost:3000/listings
+     * GET requests to http://localhost:3000/listings?minPrice=5555&maxPrice=100000&minSqft=22&maxSqft=5534&minNumBeds=2&minNumBaths=0&hasGarage=true
      */
     .get(async (req, res) => {
         let queryParams = req.query;
@@ -86,7 +93,7 @@ listingRouter.route('/')
             }
         } else {
             const QUERY_PARAMS = ['minPrice', 'maxPrice', 'minSqft', 'maxSqft', 'minNumBeds', 'minNumBaths',
-            'hasGarage', 'hasTerrace'];
+                'hasGarage', 'hasTerrace'];
             let invalidMessages = [];
             Object.entries(queryParams).forEach(([key, value]) => {
                 // Validate that the URL does not have non-valid query parameters
@@ -135,10 +142,29 @@ listingRouter.route('/')
             listings: listings,
             scriptFiles: ['get-listings-form']
         });
+    });
+
+
+/**
+ * Route that handles HTTP requests (now only GET and POST) to the http://localhost:3000/listings/new endpoint URL.
+ */
+listingRouter.route('/new')
+    /**
+     * Route that receives get requests from http://localhost:3000/listings/new, which renders to the user/browser a
+     * web page containing a Form to be filled by the user create a new listing ("Create Property").
+     * GET request to http://localhost:3000/listings/new
+     */
+    .get(async (req, res) => {
+    res.render('listings/new');
     })
 
     /**
-     * POST request to http://localhost:3000/listings/
+     * Route that receives posts requests from http://localhost:3000/listings/new, which receives the Form data filled
+     * and sent by the user/browser to create new listings. The body of the post request contains the Form data.
+     *
+     * HTML Form Request: <form action="/listings/new" method="post" enctype="multipart/form-data">
+     *
+     * POST request to http://localhost:3000/listings/new
      */
     .post(imageUpload.single('file'), async (req, res) => {
         // upload.single() -> Returns a middleware function that expects to be called with the arguments (req, res, callback).
@@ -161,15 +187,21 @@ listingRouter.route('/')
 
         // FIXME: Fix createListing()
         const newListing = await listingData.createListing(parseInt(listingPrice), location, parseInt(numBeds),
-            parseInt(numBaths), parseInt(sqft), hasGarage === 'true',
-            hasTerrace === 'true', req.file.filename);
+            parseInt(numBaths), parseInt(sqft), req.file.filename, hasGarage === 'true',
+            hasTerrace === 'true');
 
         res.redirect(`/listings/${newListing}`);
     });
 
 
+/**
+ * Route that handles HTTP requests (now only GET) to the http://localhost:3000/listings/:listingId endpoint URL.
+ */
 listingRouter.route('/:listingId')
     /**
+     * Route that receives get requests from http://localhost:3000/:listingId endpoint URL, which renders to the
+     * user/browser a web page containing all the information (list price, square feet, picture, ...) of a listing with
+     * id of (listingId).
      * GET request to http://localhost:3000/listings/655a937811d7a8e1b10c49c3
      */
     .get(async (req, res) => {

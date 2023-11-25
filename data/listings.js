@@ -13,13 +13,15 @@ const listingData = {
     numBaths,
     sqft,
     photo,
-    hasGarage, // optional
-    hasTerrace, // optional
+    hasGarage = false,
+    hasTerrace = false
 
   ) {
-    listingPrice = validate.verifyPrice(listingPrice);
-    location = validate.verifyLocation(location);
+    // TODO: Validations
+    listingPrice = validations.verifyPrice(listingPrice);
+    location = validations.verifyLocation(location);
 
+    // Database Insert
     let newListing = {
       listingPrice,
       location,
@@ -41,20 +43,26 @@ const listingData = {
 
     const listingCollection = await listings();
     const listingInfo = await listingCollection.insertOne(newListing);
+
+    // TODO: Output Validations
     if (!listingInfo.acknowledged || !listingInfo.insertedId) {
       throw new Error('Could not add listing');
     }
     const listingId = listingInfo.insertedId;
-
     return listingId.toString();
   },
 
   async getListing(listingId) {
+    // TODO: Input Validations
     // listingId = validate.verifyId(listingId);
+
+    // Database query
     const listingCollection = await listings();
     const listing = await listingCollection.findOne({
       _id: new ObjectId(listingId),
     });
+
+    // TODO: Output Validations
     if (listing === null) throw new Error('Listing could not be found with provided id');
     return listing;
   },
@@ -62,6 +70,8 @@ const listingData = {
   async getAllListings() {
     const listingCollection = await listings();
     let listingsArr = await listingCollection.find({}).toArray();
+
+    // TODO: Output Validations
     if (!listingsArr) throw new Error('Could not get all listings');
     return listingsArr;
   },
@@ -76,7 +86,7 @@ const listingData = {
       hasGarage = false,
       hasTerrace = false
   ) {
-    // Validations
+    // Input Validations
     validations.numOfArgumentsCheck('getListings()', arguments.length, 8, 8); // Check whether this function
     ({minPrice, maxPrice} = validations.listingPriceRange(minPrice, maxPrice));
     ({minSqft, maxSqft} = validations.listingSqftRange(minSqft, maxSqft));
@@ -85,6 +95,8 @@ const listingData = {
     // Garage and Terrace are optional parameters with a default value of 'false'
     hasGarage = validations.booleanCheck('hasGarage', hasGarage);
     hasTerrace = validations.booleanCheck('hasTerrace', hasTerrace);
+
+    // Database query
     const listingCollection = await listings();
     const listingsCol = await listingCollection.find(
         {
