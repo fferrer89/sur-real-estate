@@ -22,8 +22,6 @@ search {
     border-radius: 5px;
 }
 
-
-
 details {
     display: inline-block;
 }
@@ -32,7 +30,6 @@ form details, form label {
     All 'label' elements that are contained inside a 'form' element */
     margin-right: 10px;
 }
-
 
 #listings-grid {
     margin: 20px 40% 20px 20px;
@@ -51,7 +48,6 @@ form details, form label {
 }
 
 /*Rule-sets with selectors for the Property Creation Form (http://localhost:3000/listings/new)*/
-
 #create-listing-form {
     background-color: lightgray;
     padding: 5px;
@@ -61,4 +57,43 @@ form details, form label {
 #create-listing-form > * {
     padding: 5px;
     margin: 5px;
+}
+
+/*Rule-sets with selectors for the Listing Page (http://localhost:3000/listings/97876966769877578)*/
+#listing-page {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    /*grid-template-rows: repeat(4, 1fr);*/
+    grid-auto-rows: minmax(100px, auto);
+}
+#listing {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    border-style: solid;
+    border-color: black;
+}
+#deposit {
+    grid-column: 3;
+    grid-row: 1/4;
+    border-style: solid;
+    border-color: black;
+}
+#onsite-visit {
+    grid-column: 3;
+    grid-row: 2/4;
+    border-style: solid;
+    border-color: black;
+}
+#comments {
+    grid-column: 3;
+    grid-row: 3/4;
+    border-style: solid;
+    border-color: black;
+}
+#messages {
+    grid-column: 3;
+    grid-row: 4/4;
+    border-style: solid;
+    border-color: black;
 }
