@@ -11,3 +11,7 @@ package-lock.json
 # Desktop Services Store file is a macOS specific file that stores custom attributes/metadata, such as folder view
 # options, icon positions, and other visual information.
 .DS_Store
+
+
+## Code Editor files and folders to ignore
+.idea/
