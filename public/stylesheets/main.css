@@ -1,4 +1,6 @@
+/*Rule-sets with selectors that are common to more than one web page */
 
+/*Rule-sets with selectors for the Home Page (http://localhost:3000/listings)*/
 header {
     display: flex;
     justify-content: space-between;
@@ -46,4 +48,17 @@ form details, form label {
     border-style: solid;
     padding: 5px;
     border-width: thin;
+}
+
+/*Rule-sets with selectors for the Property Creation Form (http://localhost:3000/listings/new)*/
+
+#create-listing-form {
+    background-color: lightgray;
+    padding: 5px;
+    width: 80%;
+    justify-content: center;
+}
+#create-listing-form > * {
+    padding: 5px;
+    margin: 5px;
 }

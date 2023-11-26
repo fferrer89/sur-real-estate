@@ -5,5 +5,5 @@
  */
 export const mongoConfig = {
   serverUrl: "mongodb://localhost:27017/",
-  database: "real-estate-db",
+  database: "sur-real-estate-db",
 };

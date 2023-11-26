@@ -62,7 +62,7 @@
                 <button type="submit">Search</button>
             </form>
         </search>
-        <a href="/listings/new" class="nav-button">Create Property</a>
+        <a href="/listings/new" class="nav-button">Create Property</a> <!--Makes a client/browser GET request to the 'listings/new' route or endpoint-->
         <!--Check if the listings variable has data. If not, return a non-listings message-->
     </header>
     <section id="listings-grid">
@@ -72,9 +72,9 @@
             <article>
                 <!--A specific listing-->
                 <h3>
-                    <a href="/listings/{{_id}}">{{location.streetAddress}}</a>
+                    <a href="/listings/{{_id}}">{{location.address}}</a>
                 </h3>
-                <img src="../../public/uploads/{{photo}}" alt="{{location.streetAddress}} img">
+                <img src="../../public/uploads/{{photo}}" alt="{{location.address}} img">
             </article>
         {{/each}}
     {{else}}

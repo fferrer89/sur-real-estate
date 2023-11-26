@@ -7,7 +7,7 @@ await db.dropDatabase();
 console.log('Seeding database ....');
 
 const broadwayListingLocation= {
-    streetAddress: 'Broadway Ave',
+    address: 'Broadway Ave',
     number: 1502,
     zip: '60617',
     state: 'IL',
@@ -22,7 +22,7 @@ console.log(await listingData.getListing((broadwayListingId)));
 
 
 const mainStListingLocation= {
-    streetAddress: 'Main St',
+    address: 'Main St',
     number: 332,
     zip: '55430',
     state: 'IL',
@@ -36,7 +36,7 @@ const mainStListingId = await listingData.createListing(5555, mainStListingLocat
 console.log(await listingData.getListing((mainStListingId)));
 
 const centralAvnListingLocation= {
-    streetAddress: 'Central Avn',
+    address: 'Central Avn',
     number: 44,
     zip: '66656',
     state: 'IL',

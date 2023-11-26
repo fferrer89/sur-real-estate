@@ -1,7 +1,10 @@
 ## Express and Node files and folders to ignore
 # Add here any file to be ignore by git commits
+
+# Dependency directories
 node_modules/
-public/uploads
+
+# Dependency files
 package-lock.json
 
 ## MacOS files and folders to ignore
