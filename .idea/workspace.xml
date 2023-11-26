@@ -6,17 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="05f8c291-3590-4a4f-aa0f-cc46588bb02e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/mongoCollections.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/mongoCollections.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/listings.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/listings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/listingvisitor.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/listingvisitor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/listings.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/listings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/seed.js" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/seed.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/validate.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/input-validations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/listings/index.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/listings/index.handlebars" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/listings/new.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/listings/new.handlebars" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/listings/single.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/listings/single.handlebars" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
