@@ -3,7 +3,7 @@
  */
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
-import validate from "../validate.js";
+import validate from "../helpers/input-validations.js";
 
 const usersCollection = await users();
 

@@ -1,10 +1,10 @@
 <!--Section that displays a single listing from the site-->
 <main>
     <article>
-        <h2>{{listing.location.streetAddress}}</h2>
-        <img src="../../public/uploads/{{listing.photo}}" alt="{{listing.location.streetAddress}} img">
+        <h2>{{listing.location.address}}</h2>
+        <img src="../../public/uploads/{{listing.photo}}" alt="{{listing.location.address}} img">
         <address>
-            <p>Address: {{listing.location.streetAddress}}, {{listing.location.city}}, {{listing.location.state}}, {{listing.location.zip}}</p>
+            <p>Address: {{listing.location.address}}, {{listing.location.city}}, {{listing.location.state}}, {{listing.location.zip}}</p>
             <p>List Price: {{listing.listingPrice}}</p>
             <p>Square Feet: {{listing.sqft}}</p>
             <p>Number of Bedrooms: {{listing.numBeds}}</p>

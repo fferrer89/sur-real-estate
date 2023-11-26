@@ -17,7 +17,14 @@ const getCollectionFn = (collection) => {
 };
 
 // TODO: Add additional collections below if needed
-export const users = getCollectionFn('users');
+/**
+ *
+ * @type {{LISTINGS: string, USERS: string}}
+ */
+export const COLLECTION_NAMES = {
+  LISTINGS: 'listings',
+  USERS: 'users',
+}
+export const users = getCollectionFn(COLLECTION_NAMES.USERS);
 // export const messages = getCollectionFn('messages');
-export const listings = getCollectionFn('listings');
-export const images = getCollectionFn('images');
+export const listings = getCollectionFn(COLLECTION_NAMES.LISTINGS);

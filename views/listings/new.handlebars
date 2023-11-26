@@ -1,25 +1,23 @@
 <main>
     <!--Create an HTML form that allows users to select a file and upload it locally. The form will be submitted using
     the POST method and will have an encoding type of "multipart/form-data" to handle file upload.-->
-    <form action="/listings/new" method="post" enctype="multipart/form-data">
+    <form action="/listings/new" method="post" enctype="multipart/form-data" id="create-listing-form">
         <!--'enctype' enctype: Specifies the content type used to submit the form data. For file uploads, you need to
         set the enctype attribute to "multipart/form-data". This encoding type is necessary for browsers to properly
         handle file uploads.-->
         <fieldset>
             <legend>Address Information</legend>
             <label>Street Address
-                <input type="text"  name="streetAddress" placeholder="Enter listing street address" pattern="^\w.*$"
-                       required>
+                <input type="text" name="address" pattern="^\w.*$" required>
             </label>
             <label>Zip Code
-                <input type="text"  name="zip" placeholder="Enter listing zip code" pattern="^[0-9]{5}$"
-                       required>
+                <input type="text"  name="zip" pattern="^[0-9]{5}$" required>
             </label>
             <label>City
-                <input type="text"  name="city" placeholder="Enter listing city" pattern="^\w.*$" required>
+                <input type="text"  name="city" pattern="^\w.*$" required>
             </label>
             <label>State
-                <input type="text"  name="state" placeholder="Enter listing state"
+                <input type="text"  name="state" placeholder="Two-letter state abbreviation in caps"
                        pattern="(AL)|(AK)|(AZ)|(AR)|(CA)|(CO)|(CT)|(DE)|(DC)|(FL)|(GA)|(HI)|(ID)|(IL)|(IN)|(IA)|(KS)|(KY)|(LA)|(ME)|(MD)|(MA)|(MI)|(MN)|(MS)|(MO)|(MT)|(NE)|(NV)|(NH)|(NJ)|(NM)|(NY)|(NC)|(ND)|(OH)|(OK)|(OR)|(PA)|(RI)|(SC)|(SD)|(TN)|(TX)|(UT)|(VT)|(VA)|(WA)|(WV)|(WI)|(WY)"
                        required>
             </label>
@@ -28,23 +26,19 @@
         <fieldset>
             <legend>General Info</legend>
             <label>Listing Price
-                <input type="number"  name="listingPrice" min="0" max="10000000" placeholder="Enter listing Price"
-                       required>
+                <input type="number"  name="listingPrice" min="0" max="10000000" required>
             </label>
             <br>
             <label>Square Feet
-                <input type="number"  name="sqft" min="0" max="15000" placeholder="Enter listing Square Feet"
-                       required>
+                <input type="number"  name="sqft" min="0" max="15000" required>
             </label>
             <br>
             <label>Number of Bedrooms
-                <input type="number"  name="numBeds" min="0" max="20" placeholder="Enter listing Number of Bedrooms"
-                       required>
+                <input type="number"  name="numBeds" min="0" max="20" required>
             </label>
             <br>
             <label>Number of Bathrooms
-                <input type="number"  name="numBaths" placeholder="Enter listing Number of Bathrooms"
-                       required>
+                <input type="number"  name="numBaths" required>
             </label>
         </fieldset>
 
@@ -56,10 +50,10 @@
             </label>
         </fieldset>
         <label>Upload Photo
-            <input type="file" name="file" accept="image/*" required>
+            <input type="file" name="photo" accept="image/*" required>
             <!--'name' attribute: Used so that the input data can be identified when the form is submitted.-->
         </label>
         <br>
-        <button type="submit">Submit</button>
+        <button type="submit">Create Listing</button>
     </form>
 </main>
