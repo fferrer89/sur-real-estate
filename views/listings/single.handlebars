@@ -17,21 +17,52 @@
         <!--Dashboard with info here-->
     </main>
     <aside>
-        <!--Make a Deposit form here-->
         <section id="deposit">
-            <img src="../../public/images/deposit-placeholder-test.png" alt="Map Placeholder">
+            <h2>Make a Deposit</h2>
+            <form action="/listings/listingId/deposit/new" method="post">
+                <label>Deposit Amount:
+                    <input type="number" min="1" required>
+                </label>
+                <button type="submit">Make Deposit</button>
+            </form>
         </section>
-        <!--Book an onsite visit form here-->
         <section id="onsite-visit">
-            <img src="../../public/images/onsite-visit-placeholder-test.png" alt="Map Placeholder">
+            <h2>Book an Onsite Visit</h2>
+            <form action="/listings/listingId/visit/new" method="post">
+                <label>Visit Date:
+                    <input type="date" required>
+                </label>
+                <button type="submit">Book Visit</button>
+            </form>
         </section>
-        <!--Comments here-->
         <section id="comments">
-            <img src="../../public/images/comments-placeholder-test.png" alt="Map Placeholder">
+            <h2>Comments</h2>
+            <form action="/listings/listingId/comments/new" method="post">
+                <label>Post a comment on this property:
+                    <textarea name="comment" rows="2" cols="40" required></textarea>
+                </label>
+                <br>
+                <button type="submit">Post Comment</button>
+            </form>
+            <section id="listing-comments">
+                <ul>
+                    <!--Unordered List of comments, each enclosed in an <article> tag-->
+                </ul>
+            </section>
         </section>
-        <!--Messages here-->
         <section id="messages">
-            <img src="../../public/images/messages-placeholder-test.png" alt="Map Placeholder">
+            <form action="/listings/listingId/messages/new" method="post">
+                <label>Send a message to the real estate agent:
+                    <textarea name="message" rows="2" cols="40" required></textarea>
+                </label>
+                <br>
+                <button type="submit">Send Message</button>
+            </form>
+            <section id="listing-messages">
+                <ul>
+                    <!--Unordered List of messages, each enclosed in an <article> tag-->
+                </ul>
+            </section>
         </section>
     </aside>
 </section>

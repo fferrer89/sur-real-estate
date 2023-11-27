@@ -1,0 +1,28 @@
+<main>
+    <h2>Create an Account</h2>
+    <form action="/signup" method="post">
+        <label>Account Type
+            <input type="radio" name="membership" value="general" checked> General
+            <input type="radio" name="membership" value="realtor"> Realtor
+        </label>
+        <br>
+        <label>Email
+            <input type="email" name="email" pattern="^\w.*$" required>
+        </label>
+        <br>
+        <label>Username
+            <input type="text" name="username" pattern="^\w.*$" required>
+        </label>
+        <br>
+        <label>Password
+            <input type="password" name="password" pattern="^\w.*$" required>
+        </label>
+        <br>
+        <label>Upload Documentation
+            <input type="file" name="photo" accept="image/*">
+            <!--'name' attribute: Used so that the input data can be identified when the form is submitted.-->
+        </label>
+        <br>
+        <button type="submit">Sign Up</button>
+    </form>
+</main>

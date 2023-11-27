@@ -284,6 +284,12 @@ listingRouter.route('/:listingId')
             return res.status(500).json({error: e.message});
         }
     });
-
+listingRouter.route('/:listingId/messages/new')
+    .get(async (req, res) => {
+        // Retrieves all the messages of the specific listing
+    })
+    .post(async (req, res) => {
+        // Posts/creates a message of the specific listing
+    });
 
 export default listingRouter;

@@ -3,7 +3,8 @@
  */
 import userRouter from './users.js';
 import listingRouter from './listings.js';
-import messageRouter from './messages.js';
+import signupRouter from './signups.js';
+import loginRouter from './logins.js';
 
 /**
  * Constructor that adds the userRouter, listingRouter, and messageRouter Routers, which contain our route-handling code,
@@ -20,20 +21,25 @@ const routesConstructor = (app) => {
      * Only requests to /users/* will be sent to the userRouter "router". This will only be invoked if the path starts
      * with /users from the mount point (http://localhost:3000/users)
      */
-    app.use('/users', userRouter); // '/events' -> The resource URL
+    app.use('/users', userRouter);
 
     /**
      * Only requests to /listings/* will be sent to the listingRouter "router". This will only be invoked if the path starts
      * with /listings from the mount point (http://localhost:3000/listings)
      */
-    app.use('/listings', listingRouter); // '/attendees' -> The resource URL
+    app.use('/listings', listingRouter);
 
     /**
-     * Only requests to /messages/* will be sent to the messageRouter "router". This will only be invoked if the path starts
-     * with /messages from the mount point (http://localhost:3000/messages)
+     * Only requests to /signup/* will be sent to the signupRouter "router". This will only be invoked if the path starts
+     * with /signup from the mount point (http://localhost:3000/signup)
      */
-    app.use('/messages', messageRouter); // '/attendees' -> The resource URL
+    app.use('/signup', signupRouter);
 
+    /**
+     * Only requests to /login/* will be sent to the loginRouter "router". This will only be invoked if the path starts
+     * with /login from the mount point (http://localhost:3000/login)
+     */
+    app.use('/login', loginRouter);
 
     /**
      * The Home page of this application
@@ -53,4 +59,7 @@ const routesConstructor = (app) => {
 };
 
 export default routesConstructor;
+
+// signup: Create Account
+// login: To log in your already created account
 
