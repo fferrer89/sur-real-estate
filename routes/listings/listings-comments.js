@@ -2,8 +2,8 @@ import {Router} from "express";
 
 const listingCommentRouter = Router();
 // /listings/:listingId/comments
-
-
+import {listingData} from '../../data/index.js'
+import validation from "../../helpers/input-validations.js";
 /**
  * Maps the given param placeholder name(s) to the given callback(s).
  * Parameter mapping is used to provide pre-conditions to routes which use normalized placeholders. For example,
@@ -21,13 +21,29 @@ const listingCommentRouter = Router();
  * next - the next middleware function
  * id - The value of the listingId parameter
  */
-listingCommentRouter.param('listingId', async (req, res, next, id) =>  {
-    // Fetch the listing with the id from the database and add it to the request object.
-    let listingFetched = {id}; // make db request to get the listing with id (id)
-    req.listing = listingFetched;
-    // Then move to the next route
-    next();
-})
+// listingCommentRouter.param('listingId', async (req, res, next, id) =>  {
+//     // 0: Retrieve client/browser request information
+//     // 1: Validate request payload (URL Path Variables)
+//     // 2: Validate request payload individual variables (URL Path Variables)
+//     try {
+//         validation.bsonObjectId(id);
+//     } catch (e) {
+//         return res.status(400).json({errors: e.message});
+//     }
+//     // 3: Make database request
+//     let foundListing;
+//     try {
+//         foundListing = await listingData.getListing(id);
+//     } catch (e) {
+//         return res.status(500).json({errors: e.message});
+//     }
+//
+//     // 4: Add data to request object
+//     req.listing = foundListing;
+//     console.log('foundListing: ' + foundListing);
+//     // Then move to the next route
+//     next();
+// })
 
 /**
  * Route accessibility: Authentication needed. Route protected to authenticated visitors
@@ -42,6 +58,8 @@ listingCommentRouter.route('/')
      */
     .get(async (req, res) => {
         // FIXME: Route not needed for now.
+        let listingId = req;
+        return res.render('listings/single');
     })
     /**
     * Handles the data received from the form to post/create a new comment
@@ -51,7 +69,18 @@ listingCommentRouter.route('/')
      * POST request to http://localhost:3000/listings/:listingId/comments
     */
     .post(async (req, res) => {
-
+        // 0: Retrieve client/browser request information
+        // 1: Validate request payload (URL Path Variables)
+        // 2: Validate request payload individual variables (URL Path Variables)
+        let listingId = req;
+        console.log('req:  ' + req.params);
+        try {
+            validation.bsonObjectId(listingId);
+        } catch (e) {
+            return res.status(400).json({errors: e.message});
+        }
+        let request = req.body;
+        return res.render('listings/single');
     });
 
 /**

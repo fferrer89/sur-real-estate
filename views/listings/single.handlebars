@@ -33,7 +33,7 @@
         </section>
         <section id="onsite-visit">
             <h2>Book an Onsite Visit</h2>
-            <form action="/listings/listingId/visit/new" method="post">
+            <form action="/listings/listingId/visit" method="post">
                 <label>Visit Date:
                     <input type="date" required>
                 </label>
@@ -61,21 +61,21 @@
                     <p>This property has no comments yet</p>
                 {{/if}}
             {{/with}}
-            {{#if sessionUser}}
-                <form action="./comments/new" method="post">
+{{!--            {{#if sessionUser}}--}}
+                <form action="http://localhost:3000/listings/656dfb9b1c785c4c9a324a98/comments" method="post">
                     <label>Post a comment on this property:
                         <textarea name="comment" rows="2" cols="40" required></textarea>
                     </label>
                     <br>
                     <button type="submit">Post Comment</button>
                 </form>
-            {{else}}
+{{!--             {{else}}--}}
                 <a href="/login">Login to post a comment</a>
-            {{/if}}
+ {{!--            {{/if}}--}}
         </section>
         <section id="messages">
             <h2>Messages</h2>
-            <form action="/listings/listingId/messages/new" method="post">
+            <form action="./messages" method="post">
                 <label>Send a message to the real estate agent:
                     <textarea name="message" rows="2" cols="40" required></textarea>
                 </label>

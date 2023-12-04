@@ -1,12 +1,14 @@
 <main>
     <h2>Log In</h2>
     <form action="/login" method="post">
-        <label>Username
-            <input type="email" name="email" pattern="^\w.*$" required autocomplete="email">
+        <label>Email
+            <input type="email" name="email" pattern="^\w.*$" required autocomplete="email"
+            value="realtor@gmail.com">
         </label>
         <br>
         <label>Password
-            <input type="password" name="password" pattern="^\w.*$" autocomplete="current-password" required>
+            <input type="password" name="password" pattern="^\w.*$" autocomplete="current-password" required
+            value="Test123$">
         </label>
         <br>
         <button type="submit">Log In</button>

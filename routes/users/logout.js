@@ -8,7 +8,7 @@ const logoutRouter = Router(); // Creates a listingRouter object
  */
 logoutRouter.route('/').get(async (req, res) => {
     req.session.destroy(); // Destroys the session and unsets the req.session property
-    return res.render('users/logout');
+    return res.render('users/login');
 });
 
 export default logoutRouter;
