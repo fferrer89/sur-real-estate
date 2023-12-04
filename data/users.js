@@ -1,174 +1,106 @@
 /**
- * This data file should export all functions using the ES6 standard as shown in the lecture code
+ * General Steps to handle database request to a particular collection:
+ *  0: Retrieve data to be added/queried/updated to/from the database
+ *  1: Validate that data is in the correct format and follow the schema
+ *  2: Retrieve the collection
+ *  3: Perform the database operation
+ *  4: Validate output the database operation
+ *  5: Return requested data
  */
-import { ObjectId } from "mongodb";
-import { users } from "../config/mongoCollections.js";
-import validate from "../helpers/input-validations.js";
 
-const usersCollection = await users();
+import bcrypt from 'bcrypt';
+import validation from "../helpers/input-validations.js";
+import {dbSchemas} from "../helpers/object-schemas.js";
+import {DatabaseError} from "./custom-error-classes.js";
+import {COLLECTION_NAMES, users} from "../config/mongoCollections.js";
+
+/**
+ * saltRounds adds random characters to the password before it hashes it. Used to deter bruteforce hacking. The higher
+ * the saltRounds, the longer (more time) it takes to encrypt/decrypt passwords in our Server but the more secure it gets.
+ * @type {number}
+ */
+const SALT_ROUNDS = 10;
 
 const userData = {
-  async createUser(
-    firstName,
-    lastName,
-    email,
-    username,
-    hashedPassword,
-    userType,
-    listingHistory,
-    favoritedListing,
-    documentation
-  ) {
-    // TODO: Database function to create a new user
-    if (
-      firstName === undefined ||
-      lastName === undefined ||
-      email === undefined ||
-      username === undefined ||
-      hashedPassword === undefined ||
-      userType === undefined ||
-      listingHistory === undefined ||
-      favoritedListing === undefined ||
-      documentation === undefined
-    ) {
-      throw new Error("Missing one or more required parameters");
+    async signup(role = validation.isRequired('role'),
+                 email = validation.isRequired('email'),
+                 username = validation.isRequired('username'),
+                 password = validation.isRequired('password')) {
+        // 0: Retrieve data to be added/queried/updated to/from the database
+        let user = {
+            role,
+            email,
+            username,
+            password,
+        };
+        // 1: Validate that data is in the correct format and follow the schema
+        user = validation.object('user', user, dbSchemas.signupUser);
+
+        // Validate that the email address is unique
+        if (!await this.uniqueEmail(user.email)) {
+            // Email address is not unique, so throw an error
+            throw new DatabaseError(`Users collection does not allow duplicate emails`, COLLECTION_NAMES.USERS);
+        }
+
+        // TODO: The below line must be deleted. Just added for debugging purposes
+        user.passwordToDelete = user.password;
+
+        // Encrypt the passport
+        user.password = await bcrypt.hash(password, SALT_ROUNDS);
+
+        // 2: Retrieve the collection
+        // 3: Perform the database operation
+        let newUserInfo;
+        try {
+            const userCollection = await users();
+            newUserInfo = await userCollection.insertOne(user);
+        } catch (e) {
+            throw new DatabaseError(`Document insertion failure`, COLLECTION_NAMES.USERS, {cause: e});
+        }
+
+        if (!newUserInfo.acknowledged || !newUserInfo.insertedId) {
+            throw new DatabaseError(`Document insertion failure`, COLLECTION_NAMES.USERS);
+        }
+        // 4: Return requested data
+        const userId = newUserInfo.insertedId;
+        return userId.toString();
+    },
+    async login(email = validation.isRequired('email'),
+                password = validation.isRequired('password')) {
+        // 0: Retrieve data to be added/queried/updated to/from the database
+        // 1: Validate that data is in the correct format and follow the schema
+        email = validation.email('email', email);
+        password = validation.password('password', password);
+
+        // 2: Retrieve the collection
+        // 3: Perform the database operation
+        let userFound
+        try {
+            const userCollection = await users();
+            userFound = await userCollection.findOne({email: email});
+        } catch (e) {
+            throw new DatabaseError(`Document find failure`, COLLECTION_NAMES.USERS, {cause: e});
+        }
+
+        if (!userFound) {
+            // Query the db for the emailAddress supplied, if it is not found, throw an error stating "Either the email address or password is invalid".
+            throw new RangeError(`Either the email address or password is invalid`);
+        }
+        // Compare passwords. Use bcrypt to compare the hashed password in the database with the password input parameter.
+        if (!await bcrypt.compare(password, userFound.password)) {
+            throw new RangeError(`Either the email address or password is invalid`);
+        }
+        // 5: Return requested data
+        // If the passwords match your function will return the following fields of the user: firstName, lastName, emailAddress, role
+        delete userFound.password;
+        return userFound;
+    },
+    async uniqueEmail(email = validation.isRequired('email')) {
+        email = validation.email('email', email);
+        const userCollection = await users();
+        let foundEmail = await userCollection.findOne({email: email},
+            {projection: {_id: 0, emailAddress: 1}});
+        return !foundEmail;
     }
-    firstName = validate.verifyUpdateString(firstName);
-    lastName = validate.verifyUpdateString(lastName);
-    email = validate.verifyEmail(email);
-    username = validate.verifyUpdateString(username);
-    hashedPassword = validate.verifyUpdateString(hashedPassword);
-    userType = validate.verifyUserType(userType);
-    listingHistory = validate.verifyListingHistory(listingHistory);
-    favoritedListing = validate.verifyFavoritedListing(favoritedListing);
-    documentation = validate.verifyDocumentation(documentation);
-
-    let newUser = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      username: username,
-      hashedPassword: hashedPassword,
-      userType: userType,
-      listingHistory: listingHistory,
-      favoritedListing: favoritedListing,
-      documentation: documentation,
-    };
-
-    const newInsertInformation = await usersCollection.insertOne(newUser);
-    const newId = newInsertInformation.insertedId;
-    const returnedUser = await this.getUser(newId.toString());
-    returnedUser._id = returnedUser._id.toString();
-    return returnedUser;
-  },
-
-  async getUser(userId) {
-    // TODO: Database function to retrieve an existing user
-    userId = validate.verifyId(userId);
-    const user = await usersCollection.findOne({
-      _id: new ObjectId(userId),
-    });
-    if (user === null)
-      throw new Error(`User could not be found with provided id ${userId}`);
-    return user;
-  },
-
-  async getAllUsers() {
-    // TODO: Database function to retrieve all users
-    let userArr = await usersCollection.find({}).toArray();
-    if (!userArr) {
-      throw new Error("Failed to get all users");
-    }
-
-    userArr = userArr.map((element) => {
-      let resultObj = {
-        _id: element._id.toString(),
-        username: element.username,
-      };
-      return resultObj;
-    });
-
-    return userArr;
-  },
-
-  async removeUser(userId) {
-    // TODO: Database function to remove a single user
-    userId = validate.verifyId(userId);
-
-    const deletionInfo = await usersCollection.findOneAndDelete({
-      _id: new ObjectId(userId),
-    });
-
-    if (!deletionInfo) {
-      throw new Error(`Unable to delete event ${userId} from collection.`);
-    }
-    let result = {};
-    result.username = deletionInfo.username;
-    result.deleted = true;
-    return result;
-  },
-  async updateUser(
-    userId,
-    firstName,
-    lastName,
-    email,
-    username,
-    hashedPassword,
-    userType,
-    listingHistory,
-    favoritedListing,
-    documentation
-  ) {
-    // TODO: Database function to update a new user
-    if (
-      userId === undefined ||
-      firstName === undefined ||
-      lastName === undefined ||
-      email === undefined ||
-      username === undefined ||
-      hashedPassword === undefined ||
-      userType === undefined ||
-      listingHistory === undefined ||
-      favoritedListing === undefined ||
-      documentation === undefined
-    ) {
-      throw new Error("Missing one or more required parameters");
-    }
-    userId = validate.verifyId(userId);
-    firstName = validate.verifyUpdateString(firstName);
-    lastName = validate.verifyUpdateString(lastName);
-    email = validate.verifyEmail(email);
-    username = validate.verifyUpdateString(username);
-    hashedPassword = validate.verifyUpdateString(hashedPassword);
-    userType = validate.verifyUserType(userType);
-    listingHistory = validate.verifyListingHistory(listingHistory);
-    favoritedListing = validate.verifyFavoritedListing(favoritedListing);
-    documentation = validate.verifyDocumentation(documentation);
-
-    let userObj = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      username: username,
-      hashedPassword: hashedPassword,
-      userType: userType,
-      listingHistory: listingHistory,
-      favoritedListing: favoritedListing,
-      documentation: documentation,
-    };
-
-    const updatedUser = await usersCollection.findOneAndUpdate(
-      { _id: new ObjectId(userId) },
-      { $set: userObj },
-      { returnDocument: "after" }
-    );
-    if (!updatedUser) {
-      throw new Error(
-        `Could not update the user ${userId} of the Users Collection`
-      );
-    }
-    updatedUser._id = updatedUser._id.toString();
-    return updatedUser;
-  },
-};
+}
 export default userData;

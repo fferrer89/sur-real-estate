@@ -1,16 +1,16 @@
 import {ObjectId} from "mongodb";
-import {STATES, DATA_TYPES} from './constants.js';
+import {STATES, TYPES, ROLES} from './constants.js';
 import {dbSchemas} from "./object-schemas.js";
 
 const validation = {
   // Number type validations
   number(varName=validation.isRequired('varVal'),
          varVal=validation.isRequired('varVal'),
-         canBeNegative=true) {
+         canBeNegative=false) {
     if (varVal === undefined) {
       throw new TypeError(`${varName} must be provided`);
     }
-    if (typeof varVal !== DATA_TYPES.NUMBER || isNaN(varVal) || !isFinite(varVal)) {
+    if (typeof varVal !== TYPES.NUMBER || isNaN(varVal) || !isFinite(varVal)) {
       throw new TypeError(`${varName} must be a number`);
     }
     if (varVal < 0 && (!canBeNegative)) {
@@ -20,8 +20,8 @@ const validation = {
   },
   listingPriceRange(minPriceVal=validation.isRequired('minPriceVal'),
                     maxPriceVal=validation.isRequired('maxPriceVal')) {
-      let minPrice = this.number('minPrice', minPriceVal, false);
-      let maxPrice = this.number('maxPrice', maxPriceVal, false);
+      let minPrice = this.number('minPrice', minPriceVal);
+      let maxPrice = this.number('maxPrice', maxPriceVal);
       if (minPrice > maxPrice) {
         throw new RangeError(`minPrice must be smaller or equal to maxPrice`);
       }
@@ -29,8 +29,8 @@ const validation = {
   },
   listingSqftRange(minSqftVal=validation.isRequired('minSqftVal'),
                    maxSqftVal=validation.isRequired('maxSqftVal')) {
-    let minSqft = this.number('minSqft', minSqftVal, false);
-    let maxSqft = this.number('maxSqft', maxSqftVal, false);
+    let minSqft = this.number('minSqft', minSqftVal);
+    let maxSqft = this.number('maxSqft', maxSqftVal);
     if (minSqft > maxSqft) {
       throw new RangeError(`minSqft must be smaller or equal to maxSqft`);
     }
@@ -43,7 +43,7 @@ const validation = {
     if (varVal === undefined) {
       throw new TypeError(`${varName} must be provided`);
     }
-    if (typeof varVal !== DATA_TYPES.BOOLEAN) {
+    if (typeof varVal !== TYPES.BOOLEAN) {
       throw new TypeError(`${varName} must be a boolean (true or false)`);
     }
     return varVal;
@@ -53,7 +53,7 @@ const validation = {
     if (varVal === undefined) {
       throw new TypeError(`${varName} must be provided`);
     }
-    if (typeof varVal !== DATA_TYPES.STRING) {
+    if (typeof varVal !== TYPES.STRING) {
       throw new TypeError(`${varName} must be a string`);
     }
     varVal = varVal.trim();
@@ -69,13 +69,81 @@ const validation = {
     if (varVal === undefined) {
       throw new TypeError(`${varName} must be provided`);
     }
-    if (typeof varVal !== DATA_TYPES.STRING) {
+    if (typeof varVal !== TYPES.STRING) {
       throw new TypeError(`${varName} must be a string`);
     }
     if (varVal.trim() === '') {
       throw new RangeError(`${varName} can not be an empty string`);
     }
     return varVal.trim();
+  },
+  email(emailVarName=validation.isRequired('emailVarName'),
+        email=validation.isRequired('email')) {
+    email = this.string(emailVarName, email);
+    const regexEmailAddress = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/i;
+    if (!regexEmailAddress.test(email)) {
+      throw new RangeError(`${emailVarName} is not a valid email address`);
+    }
+    return email.toLowerCase();
+  },
+  password(passwordVarName=validation.isRequired('passwordVarName'),
+           password=validation.isRequired('password')) {
+    const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/;
+    if (!regexPassword.test(password)) {
+      throw new RangeError(`${passwordVarName} is not valid. There needs to be at least one uppercase character, there has to be at least one number and there has to be at least one special character`);
+    }
+    password = this.string(passwordVarName, password);
+    if (password.length < 8) {
+      throw new RangeError(`${passwordVarName} must be at least 8 characters long`);
+    }
+    return password;
+  },
+  comparePasswords(passwordAVarName=validation.isRequired('passwordAVarName'),
+                   passwordA=validation.isRequired('passwordA'),
+                   passwordBVarName=validation.isRequired('passwordBVarName'),
+                   passwordB=validation.isRequired('passwordB')) {
+    if (passwordA !== passwordB) {
+      throw new Error(`${passwordAVarName} and ${passwordBVarName} must be equal`);
+    }
+  },
+  username(usernameVarName=validation.isRequired('usernameVarName'),
+           username=validation.isRequired('username')) {
+    username = this.string(usernameVarName, username);
+    // No spaces allowed. Must be between 4 and 10 characters long.
+    const regexUsername = /^\w{4,10}$/;
+    if (!regexUsername.test(username)) {
+      throw new RangeError(`${usernameVarName} must be between 4 and 10 characters long. Only characters allowed are a to z or, A to Z or, 0 to 9 or, _`);
+    }
+    return username;
+  },
+  zip(zipVarName=validation.isRequired('zipVarName'),
+      zip=validation.isRequired('zip')) {
+    zip = this.string(zipVarName, zip);
+    // If zip is not a string that contains 5 numbers, the method should throw. (only 5-digit zip but
+    // represented as a string, because leading 0's are valid in zip codes, yet JS drops leading 0's)
+    const regexZip = /^[0-9]{5}$/;
+    if (!regexZip.test(zip)) {
+      throw new RangeError(`${zipVarName} must have 5-digits`);
+    }
+    return zip;
+  },
+  state(stateVarName=validation.isRequired('stateVarName'),
+        state=validation.isRequired('state')) {
+    state = this.string(stateVarName, state);
+    if(!STATES.includes(state)) {
+      throw new RangeError(`${stateVarName}.state must be a two-letter state abbreviation in capital letters, such as "NY" or "NJ"`);
+    }
+    return state;
+  },
+  role(roleVarName=validation.isRequired('roleVarName'),
+       role=validation.isRequired('role')) {
+    role = this.string('role', role);
+    role = role.toLowerCase();
+    if ((role === ROLES.GENERAL) || (role === ROLES.RELATOR)) {
+      return role;
+    } else {
+      throw new RangeError(`${roleVarName} must be either ${ROLES.GENERAL} or ${ROLES.RELATOR}`);
+    }
   },
 
   // Object type validations
@@ -156,20 +224,32 @@ const validation = {
       if (propertyInfo === undefined) {
         throw new TypeError(`${key} is not a valid property for ${objName}`);
       }
-      if (propertyInfo.type === DATA_TYPES.BOOLEAN) {
+      if (propertyInfo.type === TYPES.BOOLEAN) {
         object[key] = this.boolean(key, value);
-      } else if (propertyInfo.type === DATA_TYPES.NUMBER) {
+      } else if (propertyInfo.type === TYPES.NUMBER) {
         object[key] = this.number(key, value);
-      } else if (propertyInfo.type === DATA_TYPES.STRING) {
+      } else if (propertyInfo.type === TYPES.STRING) {
         object[key] = this.string(key, value);
-      } else if (propertyInfo.type === DATA_TYPES.ARRAY) {
+      } else if (propertyInfo.type === TYPES.ARRAY) {
         object[key] = this.array(key, value, propertyInfo.elementsType);
-      } else if (propertyInfo.type === DATA_TYPES.OBJECT) {
+      } else if (propertyInfo.type === TYPES.OBJECT) {
         object[key] = this.object(key, value, propertyInfo.properties);
-      } else if (propertyInfo.type === DATA_TYPES.BSON_OBJECT_ID) {
+      } else if (propertyInfo.type === TYPES.BSON_OBJECT_ID) {
         object[key] = this.bsonObjectId(value);
+      } else if (propertyInfo.type === TYPES.EMAIL) {
+        object[key] = this.email(key, value);
+      } else if (propertyInfo.type === TYPES.PASSWORD) {
+        object[key] = this.password(key, value);
+      } else if (propertyInfo.type === TYPES.USERNAME) {
+        object[key] = this.username(key, value);
+      } else if (propertyInfo.type === TYPES.ZIP) {
+        object[key] = this.zip(key, value);
+      } else if (propertyInfo.type === TYPES.STATE) {
+        object[key] = this.state(key, value);
+      } else if (propertyInfo.type === TYPES.ROLE) {
+        object[key] = this.role(key, value);
       } else {
-        throw new Error(`${propertyInfo.type} is an unrecognized data type. Available data types are ${DATA_TYPES.BOOLEAN}, ${DATA_TYPES.NUMBER}, ${DATA_TYPES.STRING}, ${DATA_TYPES.ARRAY}, ${DATA_TYPES.OBJECT}, and ${DATA_TYPES.BSON_OBJECT_ID}`);
+        throw new Error(`${propertyInfo.type} is an unrecognized data type. Available data types are ${TYPES.BOOLEAN}, ${TYPES.NUMBER}, ${TYPES.STRING}, ${TYPES.ARRAY}, ${TYPES.OBJECT}, and ${TYPES.BSON_OBJECT_ID}`);
       }
     })
     return object;
@@ -219,14 +299,26 @@ const validation = {
 
       if (element instanceof Array) {
         array.push(this.array(arrayName.concat('-inner'), element, elementsType));
-      } else if (elementsType === DATA_TYPES.BOOLEAN) {
+      } else if (elementsType === TYPES.BOOLEAN) {
         array.push(this.boolean(ERROR_MESSAGE_TYPE, element));
-      } else if (elementsType === DATA_TYPES.NUMBER) {
+      } else if (elementsType === TYPES.NUMBER) {
         array.push(this.number(ERROR_MESSAGE_TYPE, element));
-      } else if (elementsType === DATA_TYPES.STRING) {
+      } else if (elementsType === TYPES.STRING) {
         array.push(this.string(ERROR_MESSAGE_TYPE, element));
-      } else if (elementsType === DATA_TYPES.BSON_OBJECT_ID) {
+      } else if (elementsType === TYPES.BSON_OBJECT_ID) {
         array.push(this.bsonObjectId(element, ERROR_MESSAGE_TYPE));
+      } else if (elementsType === TYPES.EMAIL) {
+        array.push(this.email(ERROR_MESSAGE_TYPE, element));
+      } else if (elementsType === TYPES.PASSWORD) {
+        array.push(this.password(ERROR_MESSAGE_TYPE, element));
+      } else if (elementsType === TYPES.USERNAME) {
+        array.push(this.username(ERROR_MESSAGE_TYPE, element));
+      } else if (elementsType === TYPES.ZIP) {
+        array.push(this.zip(ERROR_MESSAGE_TYPE, element));
+      } else if (elementsType === TYPES.STATE) {
+        array.push(this.state(ERROR_MESSAGE_TYPE, element));
+      } else if (elementsType === TYPES.ROLE) {
+        array.push(this.role(ERROR_MESSAGE_TYPE, element));
       } else {
         throw new Error(`${elementsType} is an unrecognized data type. Available data types are boolean, number, string, array, and object`);
       }

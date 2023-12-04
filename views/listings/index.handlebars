@@ -3,7 +3,7 @@
     <header id="home-header">
         <search>
             <!--Search fields here-->
-            <form action="/listings" method="get" id="get-listing-form">
+            <form action="/" method="get" id="get-listing-form">
                 <details>
                     <summary>Price Range</summary>
                     <fieldset class="min-max-range">
@@ -62,12 +62,14 @@
                 <button type="submit">Search</button>
             </form>
         </search>
+        <!--TODO: Hide the Create Property Element for visitors and general users. It should be visible only to authenticated realtor users-->
         <a href="/listings/new" class="nav-button">Create Property</a> <!--Makes a client/browser GET request to the 'listings/new' route or endpoint-->
         <!--Check if the listings variable has data. If not, return a non-listings message-->
     </header>
     <section id="listings-grid">
-    {{#if listings}}
-        {{#each listings}}
+    {{#if listings}} <!--Renders the block if listings evaluates to a truthy value. '#unless' would render if it evaluates to a falsy value -->
+        {{#each listings}} <!--'each' is a handlebar helper that allows you to iterate over an ARRAY, allowing you to
+        access the array elements with the 'this' keyword-->
             <!--Iterate over each listing-->
             <article>
                 <!--A specific listing-->

@@ -26,7 +26,7 @@ const listingData = {
    * @param {string} photo
    * @param {boolean} hasGarage
    * @param {boolean} hasTerrace
-   * @return {Promise<string>} the listing id that has been creaed
+   * @return {Promise<string>} the listing id that has been created
    */
   async createListing(
       listingPrice=validation.isRequired('listingPrice'),

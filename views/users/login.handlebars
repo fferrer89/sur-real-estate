@@ -1,0 +1,17 @@
+<main>
+    <h2>Log In</h2>
+    <form action="/login" method="post">
+        <label>Username
+            <input type="email" name="email" pattern="^\w.*$" required autocomplete="email">
+        </label>
+        <br>
+        <label>Password
+            <input type="password" name="password" pattern="^\w.*$" autocomplete="current-password" required>
+        </label>
+        <br>
+        <button type="submit">Log In</button>
+    </form>
+    {{#if errorMessage}}
+        <p class="error-message-form">{{errorMessage}}!</p>
+    {{/if}}
+</main>
