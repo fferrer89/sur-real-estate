@@ -3,6 +3,7 @@ import {TYPES} from './constants.js';
 export const dbSchemas = {
     listing: {
         _id: {type: TYPES.BSON_OBJECT_ID, isRequired: false},
+        realtorId: {type: TYPES.BSON_OBJECT_ID, isRequired: true},
         listingPrice: {type: TYPES.NUMBER, isRequired: true},
         location: {
             type: TYPES.OBJECT,

@@ -5,9 +5,11 @@ import userRouter from './users/users.js';
 import listingRouter from './listings/listings.js';
 import signupRouter from './users/signup.js';
 import loginRouter from './users/login.js';
+import logoutRouter from './users/logout.js';
 import listingMessageRouter from "./listings/listings-messages.js";
 import listingCommentRouter from "./listings/listings-comments.js";
 import homeRouter from "./home.js";
+import logout from "./users/logout.js";
 
 /**
  * Constructor that adds the userRouter, listingRouter, and messageRouter Routers, which contain our route-handling code,
@@ -37,7 +39,7 @@ const routesConstructor = (app) => {
      * Only requests to /logout/* will be sent to the loginRouter "router". This will only be invoked if the path starts
      * with /logout from the mount point (http://localhost:3000/logout)
      */
-    app.use('/logout', loginRouter);
+    app.use('/logout', logoutRouter);
 
     /**
      * Only requests to /users/* will be sent to the userRouter "router". This will only be invoked if the path starts

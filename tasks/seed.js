@@ -1,10 +1,17 @@
 import {dbConnection, closeConnection} from '../config/mongoConnection.js';
-import {listingData} from '../data/index.js'
+import {listingData, userData} from '../data/index.js'
+import validation from "../helpers/input-validations.js";
 
 const db = await dbConnection();
 await db.dropDatabase();
 
 console.log('Seeding database ....');
+
+
+const realtorId = await userData.signup('realtor', 'realtor@gmail.com', 'realtor', 'Test123$');
+
+console.log('Realtor Id: ' + realtorId);
+
 
 const broadwayListingLocation= {
     address: 'Broadway Ave',
@@ -16,7 +23,7 @@ const broadwayListingLocation= {
     latitude: '102y9e129yde'
 };
 let photoBroadwayListing = 'broadway-apt-test.jpg';
-const broadwayListingId = await listingData.createListing(444, broadwayListingLocation, 4, 3,
+const broadwayListingId = await listingData.createListing(realtorId, 444, broadwayListingLocation, 4, 3,
     444, photoBroadwayListing, true, false);
 console.log(await listingData.getListing((broadwayListingId)));
 
@@ -31,7 +38,7 @@ const mainStListingLocation= {
     latitude: '102y9e129yde'
 };
 let photoMainStListing = 'main-st-house-test.jpg';
-const mainStListingId = await listingData.createListing(5555, mainStListingLocation, 2, 1,
+const mainStListingId = await listingData.createListing(realtorId, 5555, mainStListingLocation, 2, 1,
     133, photoMainStListing, true, false);
 console.log(await listingData.getListing((mainStListingId)));
 
@@ -44,7 +51,7 @@ const centralAvnListingLocation= {
     longitude: '1028ey190e0',
     latitude: '102y9e129yde'
 };
-const centralAvnListingId = await listingData.createListing(5557, centralAvnListingLocation, 3, 1,
+const centralAvnListingId = await listingData.createListing(realtorId, 5557, centralAvnListingLocation, 3, 1,
     55, photoMainStListing, true, true);
 console.log(await listingData.getListing((centralAvnListingId)));
 

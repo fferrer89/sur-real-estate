@@ -93,71 +93,76 @@ listingRouter.route('/')
      * POST request to http://localhost:3000/listings
      */
     .post(imageUpload.single('photo'), async (req, res) => {
-    // upload.single() -> Returns a middleware function that expects to be called with the arguments (req, res, callback).
-    // 0: Retrieve client/browser request information
-    let listingReqBody = req.body;
-    listingReqBody = {
-        listingPrice: listingReqBody.listingPrice,
-        address: listingReqBody.address,
-        zip: listingReqBody.zip,
-        city: listingReqBody.city,
-        state: listingReqBody.state,
-        numBeds: listingReqBody.numBeds,
-        numBaths: listingReqBody.numBaths,
-        sqft: listingReqBody.sqft,
-        photo: req.file.filename,
-        hasGarage: listingReqBody.hasGarage ? 'true' : 'false',
-        hasTerrace: listingReqBody.hasTerrace ? 'true' : 'false'
-    }
-    // 1: Validate request payload (Body - Form fields)
-    try {
-        listingReqBody = validation.object('New Property form', listingReqBody, serverSchemas.createListingPostForm);
-    } catch (e) {
-        return res.status(400).json({errors: e.message});
-    }
+        // upload.single() -> Returns a middleware function that expects to be called with the arguments (req, res, callback).
+        // 0: Retrieve client/browser request information
+        let listingReqBody = req.body;
+        listingReqBody = {
+            listingPrice: listingReqBody.listingPrice,
+            address: listingReqBody.address,
+            zip: listingReqBody.zip,
+            city: listingReqBody.city,
+            state: listingReqBody.state,
+            numBeds: listingReqBody.numBeds,
+            numBaths: listingReqBody.numBaths,
+            sqft: listingReqBody.sqft,
+            photo: req.file.filename,
+            hasGarage: listingReqBody.hasGarage ? 'true' : 'false',
+            hasTerrace: listingReqBody.hasTerrace ? 'true' : 'false'
+        }
+        // 1: Validate request payload (Body - Form fields)
+        try {
+            listingReqBody = validation.object('New Property form', listingReqBody, serverSchemas.createListingPostForm);
+        } catch (e) {
+            return res.status(400).json({errors: e.message});
+        }
 
-    // 2: Validate request payload individual variables (Body variables or Request Body Properties)
-    let location = {
-        address: listingReqBody.address,
-        zip: listingReqBody.zip,
-        city: listingReqBody.city,
-        state: listingReqBody.state
-    };
-    location = validation.address('Full Address', location);
-    let listingReqBodyParsed = {
-        listingPrice: parseInt(listingReqBody.listingPrice),
-        location: location,
-        numBeds: parseInt(listingReqBody.numBeds),
-        numBaths: parseInt(listingReqBody.numBaths),
-        sqft: parseInt(listingReqBody.sqft),
-        photo: listingReqBody.photo,
-        hasGarage: listingReqBody.hasGarage === 'true',
-        hasTerrace: listingReqBody.hasTerrace === 'true'
-    }
-    try {
-        listingReqBodyParsed = validation.object('New Property form', listingReqBodyParsed, dbSchemas.listing);
-    } catch (e) {
-        return res.status(400).json({errors: e.message});
-    }
+        // 2: Validate request payload individual variables (Body variables or Request Body Properties)
+        let location = {
+            address: listingReqBody.address,
+            zip: listingReqBody.zip,
+            city: listingReqBody.city,
+            state: listingReqBody.state
+        };
+        location = validation.address('Full Address', location);
 
-    // 3: Make database request
-    let newListing;
-    try {
-        newListing = await listingData.createListing(listingReqBodyParsed.listingPrice,
-            listingReqBodyParsed.location, listingReqBodyParsed.numBeds, listingReqBodyParsed.numBaths,
-            listingReqBodyParsed.sqft, listingReqBodyParsed.photo, listingReqBodyParsed.hasGarage,
-            listingReqBodyParsed.hasTerrace);
-    } catch (e) {
-        return res.status(500).json({errors: e.message});
-    }
+        // Retrieve loggedIn user info
+        const realtorId = req.session.user._id;
+        let listingReqBodyParsed = {
+            realtorId,
+            listingPrice: parseInt(listingReqBody.listingPrice),
+            location,
+            numBeds: parseInt(listingReqBody.numBeds),
+            numBaths: parseInt(listingReqBody.numBaths),
+            sqft: parseInt(listingReqBody.sqft),
+            photo: listingReqBody.photo,
+            hasGarage: listingReqBody.hasGarage === 'true',
+            hasTerrace: listingReqBody.hasTerrace === 'true'
+        }
+        try {
+            listingReqBodyParsed = validation.object('New Property form', listingReqBodyParsed, dbSchemas.listing);
+        } catch (e) {
+            return res.status(400).json({errors: e.message});
+        }
 
-    // 4: Respond to the client/browser request
-    try {
-        return res.redirect(`/listings/${newListing}`);
-    } catch (e) {
-        return res.status(500).json({errors: e.message});
-    }
-});
+
+        // 3: Make database request
+        let newListing;
+        try {
+            newListing = await listingData.createListing(realtorId, listingReqBodyParsed.listingPrice,
+                listingReqBodyParsed.location, listingReqBodyParsed.numBeds, listingReqBodyParsed.numBaths,
+                listingReqBodyParsed.sqft, listingReqBodyParsed.photo, listingReqBodyParsed.hasGarage,
+                listingReqBodyParsed.hasTerrace);
+        } catch (e) {
+            return res.status(500).json({errors: e.message});
+        }
+
+        // 4: Respond to the client/browser request
+        try {
+            return res.redirect(`/listings/${newListing}`);
+        } catch (e) {
+            return res.status(500).json({errors: e.message});
+        }
+    });
 
 /**
  * Route that handles HTTP requests (now only GET) to the http://localhost:3000/listings/new endpoint URL.

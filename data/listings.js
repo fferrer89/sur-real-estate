@@ -17,7 +17,7 @@ import {COLLECTION_NAMES} from "../config/mongoCollections.js"
 
 const listingData = {
   /**
-   *
+   * @param {string} realtorId
    * @param {number} listingPrice
    * @param {Object} location
    * @param {number} numBeds
@@ -29,6 +29,7 @@ const listingData = {
    * @return {Promise<string>} the listing id that has been created
    */
   async createListing(
+      realtorId = validation.isRequired('realtorId'),
       listingPrice=validation.isRequired('listingPrice'),
       location=validation.isRequired('location'),
       numBeds=validation.isRequired('numBeds'),
@@ -41,6 +42,7 @@ const listingData = {
   ) {
     // 0: Retrieve request information to be added/queried/updated to/from the database
     let newListing = {
+      realtorId,
       listingPrice,
       location,
       numBeds,
