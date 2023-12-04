@@ -62,7 +62,7 @@
                 {{/if}}
             {{/with}}
 {{!--            {{#if sessionUser}}--}}
-                <form action="http://localhost:3000/listings/656dfb9b1c785c4c9a324a98/comments" method="post">
+                <form id="post-comment-form" action="/listings/:listingId/comments" method="post">
                     <label>Post a comment on this property:
                         <textarea name="comment" rows="2" cols="40" required></textarea>
                     </label>

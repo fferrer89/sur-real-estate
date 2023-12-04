@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="05f8c291-3590-4a4f-aa0f-cc46588bb02e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/listings/listings-comments.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/listings/listings-comments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users/logout.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users/logout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/listings/listings.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/listings/listings.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/listings/single.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/listings/single.handlebars" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/users/login.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/users/login.handlebars" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +127,7 @@
       <workItem from="1701435638503" duration="7506000" />
       <workItem from="1701465052640" duration="6000" />
       <workItem from="1701516923221" duration="32578000" />
-      <workItem from="1701694151418" duration="18205000" />
+      <workItem from="1701694151418" duration="21623000" />
     </task>
     <servers />
   </component>
@@ -187,35 +187,5 @@
     <option name="CODE_SMELLS_PROFILE" value="Project Default" />
     <MESSAGE value="home-search working with front end valiations" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/listings/listings-comments.js</url>
-          <line>74</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/listings/listings-comments.js</url>
-          <line>60</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/listings/listings-comments.js</url>
-          <line>58</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/listings/listings-comments.js</url>
-          <line>70</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

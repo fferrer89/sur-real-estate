@@ -57,9 +57,6 @@ listingCommentRouter.route('/')
      * GET request to http://localhost:3000/listings/:listingId/comments
      */
     .get(async (req, res) => {
-        // FIXME: Route not needed for now.
-        let listingId = req;
-        return res.render('listings/single');
     })
     /**
     * Handles the data received from the form to post/create a new comment

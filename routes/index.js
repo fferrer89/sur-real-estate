@@ -50,20 +50,20 @@ const routesConstructor = (app) => {
     app.use('/users', userRouter);
 
 
-    /**
-     * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
-     * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
-     *
-     */
-    app.use('/listings/:listingId/messages', listingMessageRouter);
-    /**
-     * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
-     * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
-     *
-     * Route accessibility: Authentication needed. Route protected to authenticated visitors
-     *
-     */
-    app.use('/listings/:listingId/comments', listingCommentRouter);
+    // /**
+    //  * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
+    //  * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
+    //  *
+    //  */
+    // app.use('/listings/:listingId/messages', listingMessageRouter);
+    // /**
+    //  * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
+    //  * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
+    //  *
+    //  * Route accessibility: Authentication needed. Route protected to authenticated visitors
+    //  *
+    //  */
+    // app.use('/listings/:listingId/comments', listingCommentRouter);
     /**
      * Only requests to /listings/* will be sent to the listingRouter "router". This will only be invoked if the path starts
      * with /listings from the mount point (http://localhost:3000/listings)

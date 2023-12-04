@@ -21,6 +21,8 @@ import {dbSchemas, serverSchemas} from "../../helpers/object-schemas.js";
  *  uploaded files, allowing Multer to handle file uploads seamlessly in your application.
  */
 import multer from "multer";
+import listingMessageRouter from "./listings-messages.js";
+import listingCommentRouter from "./listings-comments.js";
 
 // TODO: Move imageStorage and imageUpload to router helper module to make them reusable across the app. Documentation
 //  for sighUp must be store in a PRIVATE folder for uploads
@@ -231,10 +233,48 @@ listingRouter.route('/:listingId')
         }
         // 4: Respond to the client/browser request
         try {
-            return res.render('listings/single', {listing: listing});
+            return res.render('listings/single',
+                {listing: listing, scriptFiles: ['single-listing']});
         } catch (e) {
             return res.status(500).json({error: e.message});
         }
     });
+
+/**
+ * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
+ * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
+ *
+ */
+// listingRouter.route('/:listingId/messages', listingMessageRouter);
+/**
+ * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
+ * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
+ *
+ * Route accessibility: Authentication needed. Route protected to authenticated visitors
+ *
+ */
+listingRouter.route('/:listingId/comments')
+    /**
+     * Handles the data received from the form to post/create a new comment
+     *
+     * Route accessibility: Authentication needed. Route protected to authenticated visitors
+     *
+     * POST request to http://localhost:3000/listings/:listingId/comments
+     */
+    .post(async (req, res) => {
+        // 0: Retrieve client/browser request information
+        // 1: Validate request payload (URL Path Variables)
+        // 2: Validate request payload individual variables (URL Path Variables)
+        let listingId = req;
+        console.log('req:  ' + req.params);
+        try {
+            validation.bsonObjectId(listingId);
+        } catch (e) {
+            return res.status(400).json({errors: e.message});
+        }
+        let request = req.body;
+        return res.render('listings/single');
+    });
+
 
 export default listingRouter;
