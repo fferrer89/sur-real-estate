@@ -11,6 +11,10 @@ const getCollectionFn = (collection) => {
     if (!_col) {
       const db = await dbConnection();
       _col = await db.collection(collection);
+      if (collection === COLLECTION_NAMES.USERS) {
+        _col.createIndex({email: 1}, {unique: true});
+      }
+
     }
     return _col;
   };
@@ -24,7 +28,9 @@ const getCollectionFn = (collection) => {
 export const COLLECTION_NAMES = {
   LISTINGS: 'listings',
   USERS: 'users',
+  MESSAGES: 'messages'
 }
 export const users = getCollectionFn(COLLECTION_NAMES.USERS);
 // export const messages = getCollectionFn('messages');
 export const listings = getCollectionFn(COLLECTION_NAMES.LISTINGS);
+export const messages = getCollectionFn(COLLECTION_NAMES.MESSAGES);

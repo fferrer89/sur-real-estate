@@ -3,8 +3,8 @@
  */
 import listingDataFunc from "./listings.js";
 import userDataFunc from "./users.js";
-import messageDataFunc from "./messages.js";
+import messageDataFun from "./messages.js";
 
 export const listingData = listingDataFunc;
 export const userData = userDataFunc;
-export const messageData = messageDataFunc;
+export const messageData = messageDataFun;

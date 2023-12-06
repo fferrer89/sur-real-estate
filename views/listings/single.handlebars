@@ -1,23 +1,121 @@
 <!--Section that displays a single listing from the site-->
-<main>
-    <article>
-        <h2>{{listing.location.address}}</h2>
-        <img src="../../public/uploads/{{listing.photo}}" alt="{{listing.location.address}} img">
-        <address>
-            <p>Address: {{listing.location.address}}, {{listing.location.city}}, {{listing.location.state}}, {{listing.location.zip}}</p>
-            <p>List Price: {{listing.listingPrice}}</p>
-            <p>Square Feet: {{listing.sqft}}</p>
-            <p>Number of Bedrooms: {{listing.numBeds}}</p>
-            <p>Number of Bathrooms: {{listing.numBaths}}</p>
-            <p>Includes Garage: {{listing.hasGarage}}</p>
-            <p>Includes Terrace: {{listing.hasTerrace}}</p>
-        </address>
-    </article>
-    <!--Dashboard with info here-->
-</main>
-<aside>
-    <!--Make a Deposit form here-->
-    <!--Book an onsite visit form here-->
-    <!--Comments here-->
-    <!--Messages here-->
-</aside>
+<div id="listing-page">
+    <div id="listing">
+        <article>
+            {{#with listing}} <!--'with' is a handlebar helper that allows you to dive into an OBJECT, giving you access
+            to its properties-->
+                <h2>{{location.address}}</h2>
+                <img src="../../public/uploads/{{photo}}" alt="{{location.address}} img">
+                <address>
+                    {{#with location}}
+                        <p>Address: {{address}}, {{city}}, {{state}}, {{zip}}</p>
+                    {{/with}}
+                    <p>List Price: ${{listingPrice}}</p>
+                    <p>Square Feet: {{sqft}}</p>
+                    <p>Number of Bedrooms: {{numBeds}}</p>
+                    <p>Number of Bathrooms: {{numBaths}}</p>
+                    <p>Includes Garage: {{hasGarage}}</p>
+                    <p>Includes Terrace: {{hasTerrace}}</p>
+                </address>
+            {{/with}}
+        </article>
+        <!--Dashboard with info here-->
+    </div>
+    <aside>
+        <section id="deposit">
+            <h2>Make a Deposit</h2>
+            {{#if depositMessage}}
+                <p id="depositMessage">{{depositMessage}}</p>
+            {{else}}
+                <form id="post-deposit-form" action="/listings/:listingId/deposits" method="post">
+                    <label>Deposit Amount:
+                        <input type="number" name="depositAmount" min="1" max="10000000" required>
+                    </label>
+                    <button type="submit">Make Deposit</button>
+                </form>
+                {{#unless loggedSession}}
+                    <a href="/login" class="login-message">Login to enable making a deposit</a>
+                {{/unless}}
+            {{/if}}
+        </section>
+        <section id="onsite-visit">
+            <h2>Book an Onsite Visit</h2>
+            <form id="post-visit-form" action="/listings/:listingId/visits" method="post">
+                <label>Visit Date:
+                    <input type="datetime-local" name="visitTime" required>
+                </label>
+                <button type="submit">Book Visit</button>
+            </form>
+            {{#unless loggedSession}}
+                <a href="/login" class="login-message">Login to enable booking a visit</a>
+            {{/unless}}
+        </section>
+        <section id="comments">
+            <h2>Comments</h2>
+            <!--Use Handlebars!: If user is authenticated, display the form and the comments. Otherwise, display the comments and a login link with message that "user needs to be registered to post comments"-->
+            <!--            The form is only displayed for authenticated users!-->
+            {{#with listing}}
+                {{#if comments}}
+                    {{#each comments}}
+                        <article>
+                            <h5>{{this.username}}</h5>
+                            <p>{{this.comment}}</p>
+                        </article>
+                    {{/each}}
+                {{else}}
+                    <p class="no-comments-or-messages">This property has no comments yet</p>
+                {{/if}}
+            {{/with}}
+                <form id="post-comment-form" action="/listings/:listingId/comments" method="post">
+                    <label for="comment" hidden>Post a comment on this property:</label>
+                    <input type="text" name="comment" id="comment" minlength="1" placeholder="Share comment about this listing"  required>
+                    <button type="submit">New Comment</button>
+                </form>
+            {{!--            {{#unless loggedSession}}--}}
+            {{#unless loggedSession}}
+                <a href="/login" class="login-message">Login to enable posting a comment</a>
+            {{!--            {{/unless}}--}}
+            {{/unless}}
+        </section>
+        <section id="messages">
+            <h2>Messages</h2>
+            {{!--            {{#if loggedSession}}--}}
+            {{#if loggedSession}}
+                {{#if messages}}
+                    {{#each messages}}
+                        <article>
+                            <h5>{{this.senderUsername}}</h5>
+                            <p class="original-message">Original Message</p>
+                            <p>{{this.message}}</p>
+                        </article>
+                        {{#if this.replies}}
+                            {{#each this.replies}}
+                                <article class="reply-article">
+                                    <h6>{{this.senderUsername}}</h6>
+                                    <p>{{this.message}}</p>
+                                </article>
+                            {{/each}}
+                        {{/if}}
+                        <form class="post-message-reply-form" action="/listings/:listingId/messages/{{this._id}}"
+                              method="post">
+                            <label for="messageReply" hidden>Reply to message:</label>
+                            <input type="text" name="messageReply" id="messageReply" minlength="1" required>
+                            <button type="submit">Reply</button>
+                        </form>
+                    {{/each}}
+                {{else}}
+                    <p class="no-comments-or-messages">This property has no messages yet</p>
+                {{/if}}
+                <form id="post-message-form" action="/listings/:listingId/messages" method="post">
+                    <label for="message" hidden>Send a new message to the real estate agent:</label>
+                    <input type="text" name="message" id="message" minlength="1" placeholder="Send message to listing realtor" required>
+                    <button type="submit">New Message</button>
+                </form>
+            {{!--             {{else}}--}}
+            {{else}}
+                <a href="/login" class="login-message">Login to communicate with the realtor</a>
+            {{!--            {{/if}}--}}
+            {{/if}}
+        </section>
+    </aside>
+</div>
