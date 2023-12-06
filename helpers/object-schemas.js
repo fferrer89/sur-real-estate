@@ -32,7 +32,7 @@ export const dbSchemas = {
             isRequired: false,
             properties: {
                 userId: {type: TYPES.BSON_OBJECT_ID, isRequired: true},
-                // listingId: {type: TYPES.BSON_OBJECT_ID, isRequired: true},
+                username: {type: TYPES.STRING, isRequired: true},
                 comment: {type: TYPES.STRING, isRequired: true}
             },
         }

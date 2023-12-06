@@ -12,8 +12,9 @@ import { ObjectId } from "mongodb";
 import {listings} from "../config/mongoCollections.js";
 import validation from "../helpers/input-validations.js";
 import {dbSchemas} from "../helpers/object-schemas.js";
-import {DatabaseError} from "./custom-error-classes.js";
+import {DatabaseError, DocumentNotFoundError} from "./custom-error-classes.js";
 import {COLLECTION_NAMES} from "../config/mongoCollections.js"
+import {userData} from "./index.js";
 
 const listingData = {
   /**
@@ -75,7 +76,7 @@ const listingData = {
     return listingId.toString();
   },
 
-  async getListing(listingId) {
+  async getListing(listingId=validation.isRequired('listingId'),) {
     // 0: Retrieve data to be added/queried/updated to/from the database
     // 1: Validate that data is in the correct format and follow the schema
     listingId = validation.bsonObjectId(listingId, 'listingId');
@@ -94,7 +95,7 @@ const listingData = {
 
     // 4: Validate output from database operation
     if (listing === null) {
-      throw new DatabaseError(`Document find failure`, COLLECTION_NAMES.LISTINGS);
+      throw new DocumentNotFoundError(`Listing not found`, COLLECTION_NAMES.LISTINGS, listingId);
     }
 
     // 5: Return requested data
@@ -162,6 +163,70 @@ const listingData = {
     // 4: Validate output the database operation
     // 5: Return requested data
     return listingsCol;
+  },
+
+  async addListingComment(listingId=validation.isRequired('listingId'),
+                          comment=validation.isRequired('comment')) {
+    // 0: Retrieve data to be added/queried/updated to/from the database
+    // 1: Validate that data is in the correct format and follow the schema
+    listingId = validation.bsonObjectId(listingId, 'listingId');
+    comment = validation.object('comment', comment, dbSchemas.listing.comments.properties);
+
+    // Make sure that the comment.userId is valid and exists in the database. Returns an error if user is not found
+    await userData.getUser(comment.userId)
+
+    // 2: Retrieve the collection
+    // 3: Perform the database operation
+    let listing;
+    try {
+      const listingCollection = await listings();
+      listing = await listingCollection.findOneAndUpdate(
+          {_id: new ObjectId(listingId)},
+          {$push: {comments: comment}},
+          {returnDocument: 'after'}
+      )
+    } catch (e) {
+      throw new DatabaseError(`Document find failure`, COLLECTION_NAMES.LISTINGS, {cause: e });
+    }
+    // 4: Validate output the database operation
+    if (!listing) {
+      throw new DocumentNotFoundError(`Listing not found`, COLLECTION_NAMES.LISTINGS, listingId);
+    } else {
+      // 5: Return requested data
+      return listing.comments[listing.comments.length - 1]; // Return the newly added comment
+    }
+  },
+  async addListingDeposit(listingId=validation.isRequired('listingId'),
+                           depositorId=validation.isRequired('depositorId'),
+                           depositAmount=validation.isRequired('depositAmount')) {
+    // 0: Retrieve data to be added/queried/updated to/from the database
+    // 1: Validate that data is in the correct format and follow the schema
+    listingId = validation.bsonObjectId(listingId, 'listingId');
+    depositorId = validation.bsonObjectId(depositorId, 'depositorId');
+    depositAmount = validation.number('depositAmount', depositAmount);
+    let deposit = {depositorId, depositAmount};
+
+    // Make sure that the comment.userId is valid and exists in the database. Returns an error if user is not found
+    // 2: Retrieve the collection
+    // 3: Perform the database operation
+    let listing;
+    try {
+      const listingCollection = await listings();
+      listing = await listingCollection.findOneAndUpdate(
+          {_id: new ObjectId(listingId)},
+          {$set: {deposit: deposit}},
+          {returnDocument: 'after'}
+      )
+    } catch (e) {
+      throw new DatabaseError(`Document find failure`, COLLECTION_NAMES.LISTINGS, {cause: e });
+    }
+    // 4: Validate output the database operation
+    if (!listing) {
+      throw new DocumentNotFoundError(`Listing not found`, COLLECTION_NAMES.LISTINGS, listingId);
+    } else {
+      // 5: Return requested data
+      return listing.deposit; // Return the newly added comment
+    }
   }
 };
 export default listingData;

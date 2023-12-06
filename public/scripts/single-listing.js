@@ -4,17 +4,52 @@
     // Parse CURRENT_PATH and retrieve the listingId, which is a path variable in the current url
     const CURRENT_PATH_VARS = CURRENT_PATH.split('/');
     const LISTING_ID = CURRENT_PATH_VARS[2];
-    console.log('LISTING_ID: ' + LISTING_ID);
+
+    const postDepositForm = document.getElementById('post-deposit-form');
+    const postVisitForm = document.getElementById('post-visit-form');
     const postCommentForm = document.getElementById('post-comment-form');
+    const postMessageForm = document.getElementById('post-message-form');
+
+    const postMessageReplyForms = document.getElementsByClassName('post-message-reply-form');
+
+    if (postDepositForm) {
+        let formAction = postDepositForm.getAttribute('action');
+        let newFormAction = formAction.replace(':listingId', LISTING_ID);
+        postDepositForm.setAttribute('action', newFormAction);
+    }
+    if (postVisitForm) {
+        let formAction = postVisitForm.getAttribute('action');
+        let newFormAction = formAction.replace(':listingId', LISTING_ID);
+        postVisitForm.setAttribute('action', newFormAction);
+    }
     if (postCommentForm) {
         let formAction = postCommentForm.getAttribute('action');
-        console.log('formAction: ' + formAction);
         let newFormAction = formAction.replace(':listingId', LISTING_ID);
-        console.log('newFormAction: ' + newFormAction);
-        // get the action property
-        // substitute the ':listingId'
         postCommentForm.setAttribute('action', newFormAction);
     }
-
-
+    if (postMessageForm) {
+        let formAction = postMessageForm.getAttribute('action');
+        let newFormAction = formAction.replace(':listingId', LISTING_ID);
+        postMessageForm.setAttribute('action', newFormAction);
+    }
+    if (postMessageReplyForms) {
+        console.log(postMessageReplyForms);
+        let formAction, newFormAction;
+        for (let postMessageReplyForm of postMessageReplyForms) {
+            formAction = postMessageReplyForm.getAttribute('action');
+            newFormAction = formAction.replace(':listingId', LISTING_ID);
+            postMessageReplyForm.setAttribute('action', newFormAction);
+        }
+    }
+    const loginMessage = document.getElementsByClassName('login-message');
+    let inputElements = document.getElementsByTagName('input');
+    let buttonElements = document.getElementsByTagName('button');
+    if (loginMessage.length > 0) {
+        for (let inputElement of inputElements) {
+            inputElement.disabled = true;
+        }
+        for (let buttonElement of buttonElements) {
+            buttonElement.disabled = true;
+        }
+    }
 })();

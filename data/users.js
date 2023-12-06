@@ -11,8 +11,9 @@
 import bcrypt from 'bcrypt';
 import validation from "../helpers/input-validations.js";
 import {dbSchemas} from "../helpers/object-schemas.js";
-import {DatabaseError} from "./custom-error-classes.js";
-import {COLLECTION_NAMES, users} from "../config/mongoCollections.js";
+import {DatabaseError, DocumentNotFoundError} from "./custom-error-classes.js";
+import {COLLECTION_NAMES, listings, users} from "../config/mongoCollections.js";
+import {ObjectId} from "mongodb";
 
 /**
  * saltRounds adds random characters to the password before it hashes it. Used to deter bruteforce hacking. The higher
@@ -94,6 +95,31 @@ const userData = {
         // If the passwords match your function will return the following fields of the user: firstName, lastName, emailAddress, role
         delete userFound.password;
         return userFound;
+    },
+    async getUser(userId= validation.isRequired('userId')) {
+        // 0: Retrieve data to be added/queried/updated to/from the database
+        // 1: Validate that data is in the correct format and follow the schema
+        userId = validation.bsonObjectId(userId, 'userId');
+
+        // 2: Retrieve the collection
+        // 3: Perform the database operation
+        let user;
+        try {
+            const userCollection = await users();
+            user = await userCollection.findOne({
+                _id: new ObjectId(userId),
+            })
+        } catch (e) {
+            throw new DatabaseError(`Document find failure`, COLLECTION_NAMES.LISTINGS, {cause: e });
+        }
+
+        // 4: Validate output from database operation
+        if (user === null) {
+            throw new DocumentNotFoundError(`User not found`, COLLECTION_NAMES.LISTINGS, userId);
+        }
+
+        // 5: Return requested data
+        return user;
     },
     async uniqueEmail(email = validation.isRequired('email')) {
         email = validation.email('email', email);

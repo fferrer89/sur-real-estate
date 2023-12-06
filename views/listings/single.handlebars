@@ -1,6 +1,6 @@
 <!--Section that displays a single listing from the site-->
-<section id="listing-page">
-    <main id="listing">
+<div id="listing-page">
+    <div id="listing">
         <article>
             {{#with listing}} <!--'with' is a handlebar helper that allows you to dive into an OBJECT, giving you access
             to its properties-->
@@ -10,7 +10,7 @@
                     {{#with location}}
                         <p>Address: {{address}}, {{city}}, {{state}}, {{zip}}</p>
                     {{/with}}
-                    <p>List Price: {{listingPrice}}</p>
+                    <p>List Price: ${{listingPrice}}</p>
                     <p>Square Feet: {{sqft}}</p>
                     <p>Number of Bedrooms: {{numBeds}}</p>
                     <p>Number of Bathrooms: {{numBaths}}</p>
@@ -20,25 +20,35 @@
             {{/with}}
         </article>
         <!--Dashboard with info here-->
-    </main>
+    </div>
     <aside>
         <section id="deposit">
             <h2>Make a Deposit</h2>
-            <form action="/listings/listingId/deposit/new" method="post">
-                <label>Deposit Amount:
-                    <input type="number" min="1" required>
-                </label>
-                <button type="submit">Make Deposit</button>
-            </form>
+            {{#if depositMessage}}
+                <p id="depositMessage">{{depositMessage}}</p>
+            {{else}}
+                <form id="post-deposit-form" action="/listings/:listingId/deposits" method="post">
+                    <label>Deposit Amount:
+                        <input type="number" name="depositAmount" min="1" max="10000000" required>
+                    </label>
+                    <button type="submit">Make Deposit</button>
+                </form>
+                {{#unless loggedSession}}
+                    <a href="/login" class="login-message">Login to enable making a deposit</a>
+                {{/unless}}
+            {{/if}}
         </section>
         <section id="onsite-visit">
             <h2>Book an Onsite Visit</h2>
-            <form action="/listings/listingId/visit" method="post">
+            <form id="post-visit-form" action="/listings/:listingId/visits" method="post">
                 <label>Visit Date:
-                    <input type="date" required>
+                    <input type="datetime-local" name="visitTime" required>
                 </label>
                 <button type="submit">Book Visit</button>
             </form>
+            {{#unless loggedSession}}
+                <a href="/login" class="login-message">Login to enable booking a visit</a>
+            {{/unless}}
         </section>
         <section id="comments">
             <h2>Comments</h2>
@@ -46,45 +56,66 @@
             <!--            The form is only displayed for authenticated users!-->
             {{#with listing}}
                 {{#if comments}}
-                        {{#each comments}}
-                            <ul>
-                                <!--Unordered List of comments, each enclosed in an <article> tag-->
-                                <li>
-                                    <article>
-                                        <p>{{this.user}}</p>
-                                        <p>{{this.comment}}</p>
-                                    </article>
-                                </li>
-                            </ul>
-                        {{/each}}
+                    {{#each comments}}
+                        <article>
+                            <h5>{{this.username}}</h5>
+                            <p>{{this.comment}}</p>
+                        </article>
+                    {{/each}}
                 {{else}}
-                    <p>This property has no comments yet</p>
+                    <p class="no-comments-or-messages">This property has no comments yet</p>
                 {{/if}}
             {{/with}}
-{{!--            {{#if sessionUser}}--}}
                 <form id="post-comment-form" action="/listings/:listingId/comments" method="post">
-                    <label>Post a comment on this property:
-                        <textarea name="comment" rows="2" cols="40" required></textarea>
-                    </label>
-                    <br>
-                    <button type="submit">Post Comment</button>
+                    <label for="comment" hidden>Post a comment on this property:</label>
+                    <input type="text" name="comment" id="comment" minlength="1" placeholder="Share comment about this listing"  required>
+                    <button type="submit">New Comment</button>
                 </form>
-{{!--             {{else}}--}}
-                <a href="/login">Login to post a comment</a>
- {{!--            {{/if}}--}}
+            {{!--            {{#unless loggedSession}}--}}
+            {{#unless loggedSession}}
+                <a href="/login" class="login-message">Login to enable posting a comment</a>
+            {{!--            {{/unless}}--}}
+            {{/unless}}
         </section>
         <section id="messages">
             <h2>Messages</h2>
-            <form action="./messages" method="post">
-                <label>Send a message to the real estate agent:
-                    <textarea name="message" rows="2" cols="40" required></textarea>
-                </label>
-                <br>
-                <button type="submit">Send Message</button>
-            </form>
-                <ul>
-                    <!--Unordered List of messages, each enclosed in an <article> tag-->
-                </ul>
+            {{!--            {{#if loggedSession}}--}}
+            {{#if loggedSession}}
+                {{#if messages}}
+                    {{#each messages}}
+                        <article>
+                            <h5>{{this.senderUsername}}</h5>
+                            <p class="original-message">Original Message</p>
+                            <p>{{this.message}}</p>
+                        </article>
+                        {{#if this.replies}}
+                            {{#each this.replies}}
+                                <article class="reply-article">
+                                    <h6>{{this.senderUsername}}</h6>
+                                    <p>{{this.message}}</p>
+                                </article>
+                            {{/each}}
+                        {{/if}}
+                        <form class="post-message-reply-form" action="/listings/:listingId/messages/{{this._id}}"
+                              method="post">
+                            <label for="messageReply" hidden>Reply to message:</label>
+                            <input type="text" name="messageReply" id="messageReply" minlength="1" required>
+                            <button type="submit">Reply</button>
+                        </form>
+                    {{/each}}
+                {{else}}
+                    <p class="no-comments-or-messages">This property has no messages yet</p>
+                {{/if}}
+                <form id="post-message-form" action="/listings/:listingId/messages" method="post">
+                    <label for="message" hidden>Send a new message to the real estate agent:</label>
+                    <input type="text" name="message" id="message" minlength="1" placeholder="Send message to listing realtor" required>
+                    <button type="submit">New Message</button>
+                </form>
+            {{!--             {{else}}--}}
+            {{else}}
+                <a href="/login" class="login-message">Login to communicate with the realtor</a>
+            {{!--            {{/if}}--}}
+            {{/if}}
         </section>
     </aside>
-</section>
+</div>

@@ -2,14 +2,11 @@
  * This file will import both route files and export the constructor method as shown in the lecture code.
  */
 import userRouter from './users/users.js';
-import listingRouter from './listings/listings.js';
+import listingRouter from './listings.js';
 import signupRouter from './users/signup.js';
 import loginRouter from './users/login.js';
 import logoutRouter from './users/logout.js';
-import listingMessageRouter from "./listings/listings-messages.js";
-import listingCommentRouter from "./listings/listings-comments.js";
 import homeRouter from "./home.js";
-import logout from "./users/logout.js";
 
 /**
  * Constructor that adds the userRouter, listingRouter, and messageRouter Routers, which contain our route-handling code,
@@ -49,21 +46,6 @@ const routesConstructor = (app) => {
      */
     app.use('/users', userRouter);
 
-
-    // /**
-    //  * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
-    //  * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
-    //  *
-    //  */
-    // app.use('/listings/:listingId/messages', listingMessageRouter);
-    // /**
-    //  * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
-    //  * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
-    //  *
-    //  * Route accessibility: Authentication needed. Route protected to authenticated visitors
-    //  *
-    //  */
-    // app.use('/listings/:listingId/comments', listingCommentRouter);
     /**
      * Only requests to /listings/* will be sent to the listingRouter "router". This will only be invoked if the path starts
      * with /listings from the mount point (http://localhost:3000/listings)
@@ -87,7 +69,3 @@ const routesConstructor = (app) => {
 };
 
 export default routesConstructor;
-
-// signup: Create Account
-// login: To log in your already created account
-

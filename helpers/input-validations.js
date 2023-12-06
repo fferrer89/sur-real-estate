@@ -328,13 +328,17 @@ const validation = {
   },
 
   // Other validations
+  /**
+   *
+   * @param {string} id
+   * @param {string} idVarName
+   * @return {string}
+   */
   bsonObjectId(id=validation.isRequired('id'),
-               varName='_id') {
-    if (id === undefined) {
-      throw new TypeError(`${varName} must be provided`);
-    }
+               idVarName='idVarName') {
+    id = validation.string(idVarName, id);
     if (!ObjectId.isValid(id)) {
-      throw new TypeError(`${varName} must be a valid bson ObjectId`);
+      throw new TypeError(`${idVarName} must be a valid bson ObjectId`);
     }
     return id
   },
