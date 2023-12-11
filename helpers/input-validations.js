@@ -270,7 +270,11 @@ const validation = {
       if (propertyInfo.type === TYPES.BOOLEAN) {
         object[key] = this.boolean(key, value);
       } else if (propertyInfo.type === TYPES.NUMBER) {
-        object[key] = this.number(key, value);
+        if (propertyInfo.canBeNegative) {
+          object[key] = this.number(key, value, true);
+        } else {
+          object[key] = this.number(key, value);
+        }
       } else if (propertyInfo.type === TYPES.STRING) {
         object[key] = this.string(key, value);
       } else if (propertyInfo.type === TYPES.ARRAY) {

@@ -10,8 +10,7 @@
     }
 
     const form = document.getElementById('get-listing-form');
-    const mapListings = document.getElementById('map-listings');
-    const mapElement = document.getElementById("map");
+    const listingCoordinates = document.getElementsByClassName("listing-coordinates");
 
     if (form) {
         const minPrice = document.getElementById('minPrice');
@@ -96,7 +95,6 @@
     });
 
 
-
     async function initMap() {
 
         // Request needed libraries.
@@ -140,14 +138,14 @@
         new markerClusterer.MarkerClusterer({ markers, map });
     }
 
-    const locations = [
-        { lat: 41.941502, lng: -87.640747 }, // West Melrose
-        { lat: 41.9452343, lng: -87.6482463 }, // Planet Fitness
-        { lat: 41.9111579, lng: -87.6597341}, // St Michael Catholic Church in Old Town
-        { lat: 41.966658, lng: -87.642061}, // St Michael Catholic Church in Old Town
-    ];
-
+    let locations = [];
+    if (listingCoordinates) {
+        for (let element of listingCoordinates) {
+            let lat = element.getAttributeNode('data-lat');
+            let lng = element.getAttributeNode('data-lng');
+            locations.push({lat: parseFloat(lat.value), lng: parseFloat(lng.value)});
+        }
+    }
     await initMap();
-
 
 })();

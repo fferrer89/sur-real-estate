@@ -33,8 +33,8 @@ const broadwayListingLocation= {
     zip: '60617',
     state: 'IL',
     city: 'Chicago',
-    longitude: '1028ey190e0',
-    latitude: '102y9e129yde'
+    longitude: -87.640747,
+    latitude: 41.941502
 };
 let photoBroadwayListing = 'broadway-apt-test.jpg';
 const broadwayListingId = await listingData.createListing(realtorId, 444, broadwayListingLocation, 4, 3,
@@ -48,8 +48,8 @@ const mainStListingLocation= {
     zip: '55430',
     state: 'IL',
     city: 'Chicago',
-    longitude: '1028ey190e0',
-    latitude: '102y9e129yde'
+    longitude: -87.6482463,
+    latitude: 41.9452343
 };
 let photoMainStListing = 'main-st-house-test.jpg';
 const mainStListingId = await listingData.createListing(realtorId, 5555, mainStListingLocation, 2, 1,
@@ -62,8 +62,8 @@ const centralAvnListingLocation= {
     zip: '66656',
     state: 'IL',
     city: 'Chicago',
-    longitude: '1028ey190e0',
-    latitude: '102y9e129yde'
+    longitude: -87.642061,
+    latitude: 41.966658
 };
 const centralAvnListingId = await listingData.createListing(realtorId, 5557, centralAvnListingLocation, 3, 1,
     55, photoMainStListing, true, true);

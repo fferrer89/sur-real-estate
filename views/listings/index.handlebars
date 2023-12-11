@@ -74,7 +74,8 @@
             <article>
                 <!--A specific listing-->
                 <h3>
-                    <a href="/listings/{{_id}}">{{location.address}}</a>
+                    <a href="/listings/{{_id}}" class="listing-coordinates"
+                       data-lat="{{location.latitude}}" data-lng="{{location.longitude}}">{{location.address}}</a>
                 </h3>
                 <img src="/public/uploads/{{photo}}" alt="{{location.address}} img">
             </article>
