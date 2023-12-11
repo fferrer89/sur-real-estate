@@ -9,11 +9,11 @@
  */
 
 import {Router} from "express";
-import {listingData, messageData} from '../data/index.js'
+import {listingData, messageData, listingVisitorData} from '../data/index.js'
 import validation from "../helpers/input-validations.js";
 import {dbSchemas, serverSchemas} from "../helpers/object-schemas.js";
 import {ROLES} from '../helpers/constants.js';
-
+import {OnsiteVisitError} from "../data/custom-error-classes.js";
 /**
  *  Module to set up the Multer middleware.
  *
@@ -82,6 +82,43 @@ const imageUpload = multer({
 
 const listingRouter = Router(); // Creates a listingRouter object
 
+/*
+// Example of router using middleware functions. This approach re-uses the single /users/:user_id path and adds handlers for various HTTP methods.
+const router = express.Router()
+
+router.param('user_id', function (req, res, next, id) {
+  // sample user, would actually fetch from DB, etc...
+  req.user = {id: id, name: 'TJ'};
+  next();
+})
+
+router.route('/users/:user_id')
+  .all(function (req, res, next) {
+    // middleware that runs for all HTTP verbs first. Think of it as route specific middleware!
+    next();
+  })
+  .get(function (req, res, next) {
+    // middleware that runs for get() requests to the '/users/:userId' path
+    next();
+  })
+  .get(async (req, res) => {
+    res.json(req.user);
+  })
+  .put(async (req, res) => {
+    // just an example of maybe updating the user
+    req.user.name = req.params.name;
+    // save user ... etc
+    res.json(req.user);
+  })
+  .post(function (req, res, next) {
+   // middleware
+    next(new Error('not implemented'));
+  })
+  .delete(function (req, res, next) {
+  // middleware
+    next(new Error('not implemented'));
+  })
+ */
 listingRouter.route('/')
     /**
      * Route that receives posts requests from http://localhost:3000/listings, which receives the Form data filled
@@ -165,6 +202,12 @@ listingRouter.route('/')
         }
     });
 
+// Route-level middleware mounted to the '/listings/new' mount path. The newListingMiddleware is called, then it passes
+// execution to the callback (async (req, res) => {...}) if everything is correct using "next()" or it finished execution
+// if not.
+// import listingMiddleware from "middleware/listings.js";
+// listingRouter.route('/new').get(listingMiddleware.newListing, async (req, res) => {...});
+// listingRouter.get('/new', listingMiddleware.newListing); // Middleware called before
 /**
  * Route that handles HTTP requests (now only GET) to the http://localhost:3000/listings/new endpoint URL.
  *
@@ -186,6 +229,48 @@ listingRouter.route('/new')
             return res.status(500).json({error: e.message});
         }
     })
+
+
+
+/**
+ * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
+ * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
+ *
+ */
+
+/**
+ * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
+ * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
+ *
+ * Route accessibility: Authentication needed. Route protected to authenticated visitors
+ *
+ */
+
+listingRouter.param('listingId', async (req, res, next, id) => {
+    // try to get the user details from the User model and attach it to the request object
+    // TODO: Add error handling to getListing(id) call. Not sure how to add error handling to a middleware function!
+    // try {
+    //     id = validation.bsonObjectId(id, 'listingId');
+    //     // Validate that the a listing with id 'listingId' exists in the database, and throw and error if if does not
+    // } catch (e) {
+    //     return res.status(400).json({error: e.message});
+    // }
+    req.listing = await listingData.getListing(id);
+    // Retrieve the listing visit
+    if (req.listing.visits &&  req.session.user) {
+        req.listingVisit = req.listing.visits.find((visit) => {
+            return (visit.listingId === id && visit.visitorId === req.session.user._id);
+        })
+        req.listingVisit = {
+            startTimestamp: req.listingVisit.startTimestamp.toLocaleString('en-US',
+                {dateStyle: "medium",timeStyle: "short"}),
+            endTimestamp: req.listingVisit.endTimestamp.toLocaleString('en-US',
+                {dateStyle: "medium",timeStyle: "short"})
+        }
+    }
+    // todo: Check how/if this is called when making request to: /:listingId/messages/:messageId
+    next();
+})
 
 /**
  * Route that handles HTTP requests (now only GET) to the http://localhost:3000/listings/:listingId endpoint URL.
@@ -231,14 +316,13 @@ listingRouter.route('/:listingId')
             return res.status(500).json({error: e.message});
         }
         // Make database request (messages).
-        let messages, loggedSession = false;
+        let messages;
         let depositMessage;
         if (listing.deposit) {
             depositMessage = "Listing Sold";
         }
         // If visitor is authenticated, retrieve messages
         if (req.session.user) {
-            loggedSession = true;
             if (req.session.user.role === ROLES.GENERAL) {
                 if (listing.deposit && listing.deposit.depositorId === req.session.user._id) {
                     depositMessage = `You have deposited $${listing.deposit.depositAmount} towards the purchase of this house`;
@@ -265,42 +349,11 @@ listingRouter.route('/:listingId')
         // 4: Respond to the client/browser request
         try {
             return res.render('listings/single',
-                {listing, messages, loggedSession, depositMessage, scriptFiles: ['single-listing']});
+                {listing, messages, listingVisit: req.listingVisit, depositMessage, scriptFiles: ['single-listing']});
         } catch (e) {
             return res.status(500).json({error: e.message});
         }
     });
-
-/**
- * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
- * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
- *
- */
-
-/**
- * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
- * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
- *
- * Route accessibility: Authentication needed. Route protected to authenticated visitors
- *
- */
-
-listingRouter.param('listingId', async (req, res, next, id) => {
-    // try to get the user details from the User model and attach it to the request object
-    // TODO: Add error handling to getListing(id) call. Not sure how to add error handling to a middleware function!
-    // try {
-    //     id = validation.bsonObjectId(id, 'listingId');
-    //     // Validate that the a listing with id 'listingId' exists in the database, and throw and error if if does not
-    // } catch (e) {
-    //     return res.status(400).json({error: e.message});
-    // }
-
-    req.listing = await listingData.getListing(id);
-
-
-    // todo: Check how/if this is called when making request to: /:listingId/messages/:messageId
-    next();
-})
 listingRouter.route('/:listingId/comments')
     /**
      * Handles the data received from the form to post/create a new comment
@@ -417,6 +470,7 @@ listingRouter.route('/:listingId/visits')
      * TODO: Once a listing has an, onsite visit, prevent other users to scheduling onsite visits in the same time frame
      *
      * TODO: Visits are 30 minutes long
+     * TODO: If the listing has a deposit, dont allow booking onsite visits.
      *
      * TODO: Change this method to PUT or PATCH by adding a middleware  (as we are updating a listing object, by adding a deposit to it)
      *
@@ -429,21 +483,27 @@ listingRouter.route('/:listingId/visits')
         let listingId = req.params.listingId;
         try {
             req.params.listingId = validation.bsonObjectId(listingId, 'listingId');
-            req.body.visitTime = validation.string('visitTime', req.body.visitTime);
-
-            // TODO: Convert visitTime to dateTime.
-            //  req.body.visitTime = validation.dateTime('depositAmount', req.body.visitTime);
+            /*
+             Convert visitTime, the selected user's local datetime, to dateTime timestamp. Throws an error if date is
+             in the past.
+             "2023-01-02T07:08 -> Jan 2nd at 07:08 AM
+             "2023-12-06T23:34 -> Dec 6th at 11:34 PM
+             */
+            validation.dateTimeString('visitTime', req.body.visitTime);
         } catch (e) {
             return res.status(400).json({errors: e.message});
         }
-        // TODO: validate that visitTime is not a time in the past
-        // TODO: Validate that there is not another listing in the time frame of 30 minutes from visitTime. Prevent conflicting visits!
+        // Validate that the listing does not have a deposit (here and in database). If the listing has a deposit, dont allow booking onsite visits.
+        // Validate that there is not another listing in the time frame of 30 minutes from visitTime. Prevent conflicting visits!
         // 3: Make database request
         try {
-            // listingData.addListingVisitor(listingId, visitorId, startTime);
-            // TODO: await listingData.addListingVisitor(req.params.listingId, req.session.user._id, req.body.visitTime);
+            await listingVisitorData.addListingVisitor(req.params.listingId, req.session.user._id, req.body.visitTime);
         } catch (e) {
-            return res.status(500).json({error: e.message});
+            if (e instanceof OnsiteVisitError) {
+                return res.status(400).json({error: e.message});
+            } else {
+                return res.status(500).json({error: e.message});
+            }
         }
         // 4: Respond to the client/browser request
         return res.redirect(303, 'back'); // Redirect back to the previous page. This refreshes the page

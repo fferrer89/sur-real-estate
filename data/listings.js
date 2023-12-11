@@ -12,7 +12,7 @@ import { ObjectId } from "mongodb";
 import {listings} from "../config/mongoCollections.js";
 import validation from "../helpers/input-validations.js";
 import {dbSchemas} from "../helpers/object-schemas.js";
-import {DatabaseError, DocumentNotFoundError} from "./custom-error-classes.js";
+import {DatabaseError, DocumentNotFoundError, OnsiteVisitError} from "./custom-error-classes.js";
 import {COLLECTION_NAMES} from "../config/mongoCollections.js"
 import {userData} from "./index.js";
 
@@ -86,9 +86,7 @@ const listingData = {
     let listing;
     try {
       const listingCollection = await listings();
-      listing = await listingCollection.findOne({
-        _id: new ObjectId(listingId),
-      })
+      listing = await listingCollection.findOne({_id: new ObjectId(listingId)})
     } catch (e) {
       throw new DatabaseError(`Document find failure`, COLLECTION_NAMES.LISTINGS, {cause: e });
     }
