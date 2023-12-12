@@ -74,8 +74,13 @@
             <article>
                 <!--A specific listing-->
                 <h3>
-                    <a href="/listings/{{_id}}" class="listing-coordinates"
-                       data-lat="{{location.latitude}}" data-lng="{{location.longitude}}">{{location.address}}</a>
+                    {{#if location.latitude}}
+                        <a href="/listings/{{_id}}" class="listing-coordinates"
+                           data-lat="{{location.latitude}}" data-lng="{{location.longitude}}">{{location.address}}</a>
+                    {{else}}
+                        <a href="/listings/{{_id}}">{{location.address}}</a>
+                    {{/if}}
+
                 </h3>
                 <img src="/public/uploads/{{photo}}" alt="{{location.address}} img">
             </article>
@@ -85,10 +90,4 @@
     {{/if}}
     </section>
     <div id="map"></div>
-<!--    <aside id="map-listings">-->
-<!--        &lt;!&ndash; Insert the map here&ndash;&gt;-->
-<!--        -->
-<!--&lt;!&ndash;        <img src="/public/images/map-placeholder-test.png" alt="Map Placeholder">&ndash;&gt;-->
-<!--    </aside>-->
-
 </main>

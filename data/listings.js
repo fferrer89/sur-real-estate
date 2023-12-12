@@ -57,6 +57,39 @@ const listingData = {
     newListing = validation.object('listing', newListing, dbSchemas.listing);
     validation.address('location', location);
 
+    // 1.1: Make API call to Geocoding API to get the address coordinates (lat and lng)
+    /*
+    Address Format must be: House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
+    https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyC9_iw7GAf2QkVw5tijEynNDKZXWQaoM_s
+     */
+    const API_KEY = 'AIzaSyC9_iw7GAf2QkVw5tijEynNDKZXWQaoM_s'
+    const ROOT_ENDPOINT = 'https://maps.googleapis.com';
+    const PATH = '/maps/api/geocode/json';
+    let query = `?address=${location.address},+${location.city},+${location.state},+${location.zip}&key=${API_KEY}`;
+    query = query.replaceAll(' ', '+');
+    let response;
+    try {
+      response = await fetch(ROOT_ENDPOINT + PATH + query);
+    } catch (e) {
+      throw new DatabaseError(`Document insertion failure - Geolocation Retrieval API Error`, COLLECTION_NAMES.LISTINGS, {cause: e });
+    }
+    if (!response.ok) {
+      throw new DatabaseError(`Document insertion failure - Geolocation Retrieval API Error (${response.status} - ${response.statusText})`,
+          COLLECTION_NAMES.LISTINGS);
+    }
+    response =  await response.json();
+    if (response.status === 'OK' || response.status === 'ZERO_RESULTS') {
+      if (response && response.results && response.results.length > 0 && response.results[0].geometry && response.results[0].geometry.location) {
+        let locationCoordinates = response.results[0].geometry.location;
+        newListing.location.latitude = locationCoordinates.lat;
+        newListing.location.longitude = locationCoordinates.lng;
+      }
+    } else {
+      throw new DatabaseError(`Document insertion failure - Geolocation Retrieval API Error (${response.status})`,
+          COLLECTION_NAMES.LISTINGS);
+    }
+
+
     // 2: Retrieve the collection
     // 3: Perform the database operation
     let listingInfo;

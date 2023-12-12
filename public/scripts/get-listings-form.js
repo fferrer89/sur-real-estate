@@ -128,7 +128,7 @@
             // markers can only be keyboard focusable when they have click listeners
             // open info window when marker is clicked
             marker.addListener("click", () => {
-                infoWindow.setContent(position.lat + ", " + position.lng);
+                infoWindow.setContent(position.anchor);
                 infoWindow.open(map, marker);
             });
             return marker;
@@ -143,7 +143,14 @@
         for (let element of listingCoordinates) {
             let lat = element.getAttributeNode('data-lat');
             let lng = element.getAttributeNode('data-lng');
-            locations.push({lat: parseFloat(lat.value), lng: parseFloat(lng.value)});
+            if (lat && lng) {
+                // locations.push({lat: parseFloat(lat.value), lng: parseFloat(lng.value)});
+                locations.push({
+                    lat: parseFloat(lat.value),
+                    lng: parseFloat(lng.value),
+                    anchor: element
+                });
+            }
         }
     }
     await initMap();

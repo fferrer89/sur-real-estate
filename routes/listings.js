@@ -163,6 +163,8 @@ listingRouter.route('/')
         };
         location = validation.address('Full Address', location);
 
+
+
         // Retrieve loggedIn user info
         const realtorId = req.session.user._id;
         let listingReqBodyParsed = {
