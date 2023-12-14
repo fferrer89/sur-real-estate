@@ -8,7 +8,6 @@
             }
         }
     }
-
     const form = document.getElementById('get-listing-form');
     const listingCoordinates = document.getElementsByClassName("listing-coordinates");
 
