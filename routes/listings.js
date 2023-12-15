@@ -163,8 +163,6 @@ listingRouter.route('/')
         };
         location = validation.address('Full Address', location);
 
-
-
         // Retrieve loggedIn user info
         const realtorId = req.session.user._id;
         let listingReqBodyParsed = {
@@ -389,7 +387,7 @@ listingRouter.route('/:listingId/comments')
             return res.status(500).json({error: e.message});
         }
         // 4: Respond to the client/browser request
-        return res.redirect(303, 'back'); // Redirect back to the previous page. This refreshes the page
+        return res.render('partials/listing-comment', {layout: null, username:comment.username, comment:comment.comment});
     });
 // GET /listings/:listingId/comments/new
 

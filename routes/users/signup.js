@@ -11,8 +11,57 @@ import {Router} from "express";
 import validation from "../../helpers/input-validations.js";
 import {serverSchemas} from "../../helpers/object-schemas.js";
 import {userData} from '../../data/index.js'
+import multer from "multer";
 
 const signupRouter = Router(); // Creates a signupRouter object
+
+const imageStorage = multer.diskStorage({
+    /**
+     * The folder to which the file has been saved:
+     *
+     * The destination function specifies the directory where the uploaded files will be saved. In this example, we set
+     * it to 'uploads/', which means the files will be stored in a folder named "uploads" in the root directory of your
+     * project. You can customize the destination path based on your requirements.
+     *
+     * You are responsible for creating the directory when providing destination as a function.
+     * @param req
+     * @param photo
+     * @param cb
+     */
+    destination: (req, photo, cb) => {
+        cb(null, 'static/uploads');
+    },
+
+    /**
+     * The name of the file within the destination:
+     *
+     * The filename function determines the name of the uploaded file. In this example, we use Date.now() to generate a
+     * unique timestamp for each uploaded file, which helps prevent filename clashes.
+     *
+     * We append the original name of the file using photo.originalname to maintain some context about the uploaded file.
+     * You can modify this function to generate filenames based on your specific needs.
+     * @param req
+     * @param photo
+     * @param cb
+     */
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+/**
+ * Create the multer instance:
+ *
+ * After setting up the storage configuration, you create an instance of Multer by calling multer({storage}), passing
+ * in the storage configuration object. This creates the Multer middleware that you can use in your Express application
+ * to handle file uploads.
+ *
+ */
+const imageUpload = multer({
+    storage: imageStorage,
+    limits: {
+        fileSize: 20000000 // 20 MB (1000000 Bytes = 1 MB)
+    }
+});
 signupRouter.route('/')
     /**
      * Route that receives get requests from http://localhost:3000/signup, which renders to the user/browser a
@@ -40,13 +89,13 @@ signupRouter.route('/')
      *
      * POST request to http://localhost:3000/signup
      */
-    .post(async (req, res) => {
+    .post(imageUpload.single('file'), async (req, res) => {
         // 0: Retrieve client/browser request information
         // 1: Validate request payload (Request Body)
         let signupForm = req.body;
 
         // FIXME: Delete line below and enable sending files capabilities
-        delete signupForm.file;
+        signupForm.file = req.file.filename;
 
         try {
             signupForm = validation.object('Sign Up form', signupForm, serverSchemas.signupPostForm);

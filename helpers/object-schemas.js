@@ -76,7 +76,7 @@ export const serverSchemas = {
         username: {type: TYPES.USERNAME, isRequired: true},
         password: {type: TYPES.PASSWORD, isRequired: true},
         confirmPassword: {type: TYPES.PASSWORD, isRequired: true},
-        file: {type: TYPES.STRING, isRequired: false},
+        file: {type: TYPES.STRING, isRequired: true},
         // TODO: Add check for "file" field
     },
     loginPostForm: {

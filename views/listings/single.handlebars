@@ -78,21 +78,24 @@
             <!--Use Handlebars!: If user is authenticated, display the form and the comments. Otherwise, display the comments and a login link with message that "user needs to be registered to post comments"-->
             <!--            The form is only displayed for authenticated users!-->
             {{#with listing}}
-                {{#if comments}}
-                    {{#each comments}}
-                        <article>
-                            <h5>{{this.username}}</h5>
-                            <p>{{this.comment}}</p>
-                        </article>
-                    {{/each}}
-                {{else}}
-                    <p class="no-comments-or-messages">This property has no comments yet</p>
-                {{/if}}
+                <div id="comments-list">
+                    {{#if comments}}
+                        {{#each comments}}
+                            <article>
+                                <h5>{{this.username}}</h5>
+                                <p>{{this.comment}}</p>
+                            </article>
+                        {{/each}}
+                    {{else}}
+                        <p class="no-comments-or-messages" id="no-comments-message">This property has no comments yet</p>
+                    {{/if}}
+                </div>
             {{/with}}
             <form id="post-comment-form" action="/listings/:listingId/comments" method="post">
                 <label for="comment" hidden>Post a comment on this property:</label>
                 <input type="text" name="comment" id="comment" minlength="1"
                        placeholder="Share comment about this listing" required>
+                <input type="text" name="listingId" id="listingId" hidden value={{listing._id}}>
                 <button type="submit">New Comment</button>
             </form>
             {{!--            {{#unless loggedUserInfo}}--}}
