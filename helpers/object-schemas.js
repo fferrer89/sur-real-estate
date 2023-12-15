@@ -14,8 +14,8 @@ export const dbSchemas = {
                 zip: {type: TYPES.ZIP, isRequired: true},
                 state: {type: TYPES.STATE, isRequired: true},
                 city: {type: TYPES.STRING, isRequired: true},
-                longitude: {type: TYPES.STRING, isRequired: false},
-                latitude: {type: TYPES.STRING, isRequired: false},
+                longitude: {type: TYPES.NUMBER, canBeNegative: true, isRequired: false},
+                latitude: {type: TYPES.NUMBER, canBeNegative: true, isRequired: false},
             }
         },
         numBeds: {type: TYPES.NUMBER, isRequired: true},
@@ -76,7 +76,7 @@ export const serverSchemas = {
         username: {type: TYPES.USERNAME, isRequired: true},
         password: {type: TYPES.PASSWORD, isRequired: true},
         confirmPassword: {type: TYPES.PASSWORD, isRequired: true},
-        file: {type: TYPES.STRING, isRequired: false},
+        file: {type: TYPES.STRING, isRequired: true},
         // TODO: Add check for "file" field
     },
     loginPostForm: {

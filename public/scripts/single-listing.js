@@ -26,6 +26,32 @@
         let formAction = postCommentForm.getAttribute('action');
         let newFormAction = formAction.replace(':listingId', LISTING_ID);
         postCommentForm.setAttribute('action', newFormAction);
+        postCommentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const comment = document.querySelector("#comment");
+            const listingId = document.querySelector("#listingId");
+            let formData = {comment:comment.value};
+
+            const response = await fetch(newFormAction,
+                {
+                    method:"POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formData)
+                });
+            if (!response.ok) {
+                throw new Error(`${response.status} -${response.statusText}`)
+            }
+            console.log(response);
+            const commentList = document.querySelector("#comments-list");
+            let resText = await response.text();
+            comment.value = '';
+            const noCommentsMessage = document.querySelector("#no-comments-message");
+
+            if (noCommentsMessage) {
+                noCommentsMessage.remove();
+            }
+            commentList.insertAdjacentHTML("beforeend", resText);
+        });
     }
     if (postMessageForm) {
         let formAction = postMessageForm.getAttribute('action');

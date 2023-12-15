@@ -5,7 +5,7 @@
             {{#with listing}} <!--'with' is a handlebar helper that allows you to dive into an OBJECT, giving you access
             to its properties-->
                 <h2>{{location.address}}</h2>
-                <img src="../../public/uploads/{{photo}}" alt="{{location.address}} img">
+                <img src="/public/uploads/{{photo}}" alt="{{location.address}} img">
                 <address>
                     {{#with location}}
                         <p>Address: {{address}}, {{city}}, {{state}}, {{zip}}</p>
@@ -23,7 +23,10 @@
     </div>
     <aside>
         <section id="deposit">
-            <h2>Make a Deposit</h2>
+            <hgroup>
+                <h2>Make a Deposit</h2>
+                <p class="side-comment"><small>(Reserve this listing by making a deposit)</small></p>
+            </hgroup>
             {{#if depositMessage}}
                 <p id="depositMessage">{{depositMessage}}</p>
             {{else}}
@@ -33,54 +36,82 @@
                     </label>
                     <button type="submit">Make Deposit</button>
                 </form>
-                {{#unless loggedSession}}
+                {{#unless loggedUserInfo}}
                     <a href="/login" class="login-message">Login to enable making a deposit</a>
                 {{/unless}}
             {{/if}}
         </section>
         <section id="onsite-visit">
-            <h2>Book an Onsite Visit</h2>
-            <form id="post-visit-form" action="/listings/:listingId/visits" method="post">
-                <label>Visit Date:
-                    <input type="datetime-local" name="visitTime" required>
-                </label>
-                <button type="submit">Book Visit</button>
-            </form>
-            {{#unless loggedSession}}
+            <hgroup>
+                <h2>Book an Onsite Visit</h2>
+                <p class="side-comment"><small>(Select a time to book a 30-minute visit)</small></p>
+            </hgroup>
+            {{#if listingVisit}}
+                {{#with listingVisit}}
+                    <p id="onsite-visit-scheduled">You have scheduled an onsite visit with the following details:</p>
+                    <ul id="onsite-visit-scheduled-dates">
+                        <li>
+                            <time datetime="{{startTimestamp}}"><strong>Start Time:</strong> {{startTimestamp}}</time>
+                        </li>
+                        <li>
+                            <time datetime="{{endTimestamp}}"><strong>End Time:</strong> {{endTimestamp}}</time>
+                        </li>
+                    </ul>
+                {{/with}}
+            {{else}}
+                <form id="post-visit-form" action="/listings/:listingId/visits" method="post">
+                    <label>Visit Date:
+                        <input type="datetime-local" name="visitTime" required>
+                    </label>
+                    <button type="submit">Book Visit</button>
+                </form>
+            {{/if}}
+            {{#unless loggedUserInfo}}
                 <a href="/login" class="login-message">Login to enable booking a visit</a>
             {{/unless}}
         </section>
         <section id="comments">
-            <h2>Comments</h2>
+            <hgroup>
+                <h2>Comments</h2>
+                <p class="side-comment"><small>(Share a comment about this property with other users)</small></p>
+            </hgroup>
             <!--Use Handlebars!: If user is authenticated, display the form and the comments. Otherwise, display the comments and a login link with message that "user needs to be registered to post comments"-->
             <!--            The form is only displayed for authenticated users!-->
             {{#with listing}}
-                {{#if comments}}
-                    {{#each comments}}
-                        <article>
-                            <h5>{{this.username}}</h5>
-                            <p>{{this.comment}}</p>
-                        </article>
-                    {{/each}}
-                {{else}}
-                    <p class="no-comments-or-messages">This property has no comments yet</p>
-                {{/if}}
+                <div id="comments-list">
+                    {{#if comments}}
+                        {{#each comments}}
+                            <article>
+                                <h5>{{this.username}}</h5>
+                                <p>{{this.comment}}</p>
+                            </article>
+                        {{/each}}
+                    {{else}}
+                        <p class="no-comments-or-messages" id="no-comments-message">This property has no comments yet</p>
+                    {{/if}}
+                </div>
             {{/with}}
-                <form id="post-comment-form" action="/listings/:listingId/comments" method="post">
-                    <label for="comment" hidden>Post a comment on this property:</label>
-                    <input type="text" name="comment" id="comment" minlength="1" placeholder="Share comment about this listing"  required>
-                    <button type="submit">New Comment</button>
-                </form>
-            {{!--            {{#unless loggedSession}}--}}
-            {{#unless loggedSession}}
+            <form id="post-comment-form" action="/listings/:listingId/comments" method="post">
+                <label for="comment" hidden>Post a comment on this property:</label>
+                <input type="text" name="comment" id="comment" minlength="1"
+                       placeholder="Share comment about this listing" required>
+                <input type="text" name="listingId" id="listingId" hidden value={{listing._id}}>
+                <button type="submit">New Comment</button>
+            </form>
+            {{!--            {{#unless loggedUserInfo}}--}}
+            {{#unless loggedUserInfo}}
                 <a href="/login" class="login-message">Login to enable posting a comment</a>
             {{!--            {{/unless}}--}}
             {{/unless}}
         </section>
         <section id="messages">
-            <h2>Messages</h2>
-            {{!--            {{#if loggedSession}}--}}
-            {{#if loggedSession}}
+            <hgroup>
+                <h2>Messages</h2>
+                <p class="side-comment"><small>(Send a private message to the listing broker for more
+                    information)</small></p>
+            </hgroup>
+            {{!--            {{#if loggedUserInfo}}--}}
+            {{#if loggedUserInfo}}
                 {{#if messages}}
                     {{#each messages}}
                         <article>
@@ -108,7 +139,8 @@
                 {{/if}}
                 <form id="post-message-form" action="/listings/:listingId/messages" method="post">
                     <label for="message" hidden>Send a new message to the real estate agent:</label>
-                    <input type="text" name="message" id="message" minlength="1" placeholder="Send message to listing realtor" required>
+                    <input type="text" name="message" id="message" minlength="1"
+                           placeholder="Send message to listing realtor" required>
                     <button type="submit">New Message</button>
                 </form>
             {{!--             {{else}}--}}

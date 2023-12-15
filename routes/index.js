@@ -26,6 +26,11 @@ const routesConstructor = (app) => {
      */
     app.use('/signup', signupRouter);
 
+    // Application-level middleware mounted to the '/signup' mount path. The authMiddleware is called, then it passes execution
+    // to the signupRouter if everything is correct using "next()" or it finished execution if not.
+    // import authMiddleware from "middleware/auth.js";
+    // app.use('/signup', authMiddleware, signupRouter);
+
     /**
      * Only requests to /login/* will be sent to the loginRouter "router". This will only be invoked if the path starts
      * with /login from the mount point (http://localhost:3000/login)

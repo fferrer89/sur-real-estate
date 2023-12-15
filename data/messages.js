@@ -28,7 +28,7 @@ const messageData = {
             senderUsername: senderUsername.username,
             receiverId,
             message,
-            timestamp: new Date()
+            timestamp: new Date(),
         };
         if (listingId) {
             newMessage.listingId = validation.bsonObjectId(listingId, 'listingId');

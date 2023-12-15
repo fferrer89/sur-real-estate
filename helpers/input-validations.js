@@ -146,6 +146,49 @@ const validation = {
     }
   },
 
+  // Date and DateTime validations
+  /**
+   * Takes a string representation of a date and time and returns the date's timestamp, which is the number of
+   * milliseconds since the midnight at the beginning of January 1, 1970, UTC (the epoch). The string representation of
+   * the date must be in the following format "YYYY-MM-DDTHH:mm:ss.sssZ", otherwise, an error will be returned.
+   *
+   * Valid formats:
+   * "2023-01-02T07:08" -> Jan 2nd at 07:08 AM
+   * "2023-12-06T23:34" -> Dec 6th at 11:34 PM
+   *
+   * @param {string} datetimeVarName the name of the variable holding the string data
+   * @param {string} datetime the string representation of a datetime
+   * @param {boolean} allowsPast a boolean indicating whether the date provided can be a date in the past
+   * @return {number} the string representation of the date provided converted to timestamp
+   * @throws RangeError when the date format provided is not correct or the date cannot be converted to timestamp
+   */
+  dateTimeString(datetimeVarName=validation.isRequired('datetimeVarName'),
+                 datetime=validation.isRequired('datetime'),
+                 allowsPast = false) {
+    datetime = validation.string(datetimeVarName, datetime);
+    const datetimeTimestamp = Date.parse(datetime);
+    if (isNaN(datetimeTimestamp) || datetimeTimestamp < 0) {
+      throw new RangeError(`${datetimeVarName} is not in the correct format. The date must be in military time and its format must be as follows "YYYY-MM-DDTHH:mm"`);
+    }
+    if (!allowsPast) {
+      // validate that the date is not a time in the past
+      if (datetimeTimestamp < Date.now()) {
+        throw new RangeError(`${datetimeVarName} cannot be a date in the past`);
+      }
+    }
+    return datetimeTimestamp;
+  },
+
+  /**
+   * Takes an onsite visti
+   * @param {string} datetimeVarName
+   * @param {number} onsiteVisitTimestamp
+   */
+  onsiteVisit(datetimeVarName=validation.isRequired('datetimeVarName'),
+              onsiteVisitTimestamp=validation.isRequired('onsiteVisitTimestamp')) {
+
+  },
+
   // Object type validations
   /**
    * Takes {@link objVal} and validates that it is a valid object and that is properties are valid, according to the
@@ -227,7 +270,11 @@ const validation = {
       if (propertyInfo.type === TYPES.BOOLEAN) {
         object[key] = this.boolean(key, value);
       } else if (propertyInfo.type === TYPES.NUMBER) {
-        object[key] = this.number(key, value);
+        if (propertyInfo.canBeNegative) {
+          object[key] = this.number(key, value, true);
+        } else {
+          object[key] = this.number(key, value);
+        }
       } else if (propertyInfo.type === TYPES.STRING) {
         object[key] = this.string(key, value);
       } else if (propertyInfo.type === TYPES.ARRAY) {

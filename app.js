@@ -1,10 +1,11 @@
 import express from 'express';
 const app = express();
 import configRoutes from './routes/index.js';
-import {fileURLToPath} from 'url';
-import {dirname} from 'path';
+import {fileURLToPath} from 'node:url'; // The node:url module provides utilities for URL resolution and parsing.
+import {dirname} from 'node:path'; // The node:path module provides utilities for working with file and directory paths
 import handlebars from 'express-handlebars';
 import session from "express-session";
+import {ROLES} from "./helpers/constants.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,6 +18,37 @@ app.use(express.json());
 app.use(express.urlencoded({
       extended: true}
 ));
+
+/**
+ * Create a middleware function
+ * If the user posts to the server with a property called _method, rewrite the request's method. To be that method; so
+ * if they post _method=PUT you can now allow browsers to POST to a route that gets rewritten in this middleware to a
+ * PUT route.
+ *
+ * This middleware function is applied to the ENTIRE APPLICATION (all routes).
+ *
+ * HTML <form> only knows GET and POST, but we can change it with a middleware function such as this one.
+ *
+ * <form action="/posts" method="POST"">
+ *  <input type="hidden" name='_method' value="PUT" />
+ */
+const changeMethodHtmlForm = (req, res, next) => {
+    // Check if the request has body and if the request body has a property named '_method'
+    if (req.body && req.body._method) { //  name='_method' AND value="PUT" -> {_method: 'PUT'}
+        // The request has body and has a property named '_method', so change the request method to the value of
+        // req.body._method. Then delete the '_method' property and value from the request body (req.body._method)
+        req.method = req.body._method; // modify the request method
+        delete req.body._method;
+    }
+    next(); // Calls the next middleware function, which is app.use('/public', publicDir) if the request URL is '/public'
+    // or app.use(express.json()) if the request URL is not '/public'.
+};
+/**
+ * Mount/Register the middleware function rewriteUnsupportedBrowserMethods()
+ *
+ * This middleware is mounted without a path, so it will be executed for every request to the app
+ */
+app.use(changeMethodHtmlForm);
 
 const NUM_OF_HOURS_SESSION_EXPIRES = 5;
 const ONE_HOUR = 3600000; // In milliseconds
@@ -49,7 +81,6 @@ app.use(
     })
 );
 
-// TODO: Delete middleware from below. Only added for debugging purposes
 app.use((req, res, next) => {
     // Since it uses the method app.use(...), this application-level middleware gets executed for any type of HTTP request
     // to the root path '/'
@@ -57,6 +88,11 @@ app.use((req, res, next) => {
     // Log the request information
     console.log(`[${new Date().toLocaleString('en-US')}]: ${req.method} ${req.path} (${authState})`);
     if (req.session.user) {
+        // Setting res locals, which are variables that are accessible in the view html templates rendered by the
+        // handlebars view engine using the res.render() method.
+        res.locals.isRealtor = (req.session.user.role === ROLES.RELATOR);
+        res.locals.isGeneral = (req.session.user.role === ROLES.GENERAL)
+        res.locals.loggedUserInfo = req.session.user;
         console.log(`\t- Role->${req.session.user.role} Email->${req.session.user.email} Username->${req.session.user.username}`);
     }
     next();

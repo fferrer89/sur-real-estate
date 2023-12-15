@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href='../../public/stylesheets/main.css'>
+    <link rel='stylesheet' href='/public/stylesheets/main.css'>
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js" defer></script>
+
     {{#if scriptFiles}}
         {{#each scriptFiles}}
-            <script src="../../public/scripts/{{this}}.js" async></script>
+            <script src="/public/scripts/{{this}}.js" defer></script>
         {{/each}}
     {{/if}}
     <title>SurReal Estate</title>
@@ -23,18 +25,27 @@
             <li>
                 <a href="/">Home</a>
             </li>
-            <li>
-                <!--TODO: Hide Sign Up option when visitor is authenticated-->
-                <a href="/signup">Sign Up</a>
-            </li>
-            <li>
-                <!--TODO: Hide Log In option when visitor is authenticated-->
-                <a href="/login">Log In</a>
-            </li>
-            <li>
-                <!--TODO: Hide Log Out option when visitor is not authenticated-->
-                <a href="/logout">Log Out</a>
-            </li>
+            {{#if loggedUserInfo}}
+                {{#with loggedUserInfo}}
+                    <li>
+                        <!--Hide Log Out option when visitor is not authenticated-->
+                        <a href="/">{{username}} - Role: {{role}}</a>
+                    </li>
+                {{/with}}
+                <li>
+                    <!--Hide Log Out option when visitor is not authenticated-->
+                    <a href="/logout">Log Out</a>
+                </li>
+            {{else}}
+                <li>
+                    <!--Hide Sign Up option when visitor is authenticated-->
+                    <a href="/signup">Sign Up</a>
+                </li>
+                <li>
+                    <!--Hide Log In option when visitor is authenticated-->
+                    <a href="/login">Log In</a>
+                </li>
+            {{/if}}
         </ul>
     </nav>
 </header>
@@ -42,10 +53,11 @@
 {{{body}}}
 <hr>
 <footer>
+    <p>Contact Us:</p>
     <address>
-        <p>Contact Us</p>
-        <p>Address: 50 Main St</p>
-        <p>Phone: (643)540-4451</p>
+        Address: 50 Main St
+        <br>
+        <a href="tel:+14126890000">+1 (412) 689-0000</a>
     </address>
 </footer>
 </body>

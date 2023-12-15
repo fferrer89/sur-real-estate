@@ -74,17 +74,20 @@
             <article>
                 <!--A specific listing-->
                 <h3>
-                    <a href="/listings/{{_id}}">{{location.address}}</a>
+                    {{#if location.latitude}}
+                        <a href="/listings/{{_id}}" class="listing-coordinates"
+                           data-lat="{{location.latitude}}" data-lng="{{location.longitude}}">{{location.address}}</a>
+                    {{else}}
+                        <a href="/listings/{{_id}}">{{location.address}}</a>
+                    {{/if}}
+
                 </h3>
-                <img src="../../public/uploads/{{photo}}" alt="{{location.address}} img">
+                <img src="/public/uploads/{{photo}}" alt="{{location.address}} img">
             </article>
         {{/each}}
     {{else}}
         <p>No listing found. Please adjust filter criteria.</p>
     {{/if}}
     </section>
-    <aside id="map-listings">
-        <!-- Insert the map here-->
-        <img src="../../public/images/map-placeholder-test.png" alt="Map Placeholder">
-    </aside>
+    <div id="map"></div>
 </main>
