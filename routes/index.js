@@ -1,7 +1,6 @@
 /**
  * This file will import both route files and export the constructor method as shown in the lecture code.
  */
-import userRouter from './users/users.js';
 import listingRouter from './listings.js';
 import signupRouter from './users/signup.js';
 import loginRouter from './users/login.js';
@@ -43,13 +42,7 @@ const routesConstructor = (app) => {
      */
     app.use('/logout', logoutRouter);
 
-    /**
-     * Only requests to /users/* will be sent to the userRouter "router". This will only be invoked if the path starts
-     * with /users from the mount point (http://localhost:3000/users)
-     * This will match requests to any path that follows the '/users' path immediately after '/'. For example, these
-     * '/users', '/users/images', 'users/images/news/879797897', ...
-     */
-    app.use('/users', userRouter);
+
 
     /**
      * Only requests to /listings/* will be sent to the listingRouter "router". This will only be invoked if the path starts

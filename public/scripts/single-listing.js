@@ -78,4 +78,47 @@
             buttonElement.disabled = true;
         }
     }
+
+
+    // ONSITE VISIT LOGIC
+    /*
+    Once a listing has an, onsite visit, prevent other users to scheduling onsite visits in the same time frame
+     If the listing has a deposit, dont allow booking onsite visits.
+     Prevent times in the past
+     */
+    const visitTime = document.querySelector('#post-visit-form input');
+    if (visitTime) {
+        let curDateTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0]
+        curDateTime = curDateTime.substring(0, curDateTime.length - 3); // YYYY-MM-DDThh:mm
+        visitTime.min = curDateTime;
+    }
+
+    let listingHistory =  localStorage.getItem('listingHistory');
+    const listingName = document.querySelector('#listing > article > h2').textContent;
+    // listingHistory -> [{id: '657786efe400c2dd593621ae', name: 'Broadwarey Av', visits: 4}, {id: '657786efe400c2dd593621ae', name: 'Broadwarey Av', visits: 4}];
+    // {id: '657786efe400c2dd593621ae', name: 'Broadwarey Av', visits: 4};
+    if (listingHistory) {
+        // there is a history of listing visits
+        listingHistory = JSON.parse(listingHistory); // returns an array
+        // Check if the listing has been visited before
+        let listingHasVisit = false;
+        listingHistory.forEach((listing) => {
+            if (listing.id === LISTING_ID) {
+                listingHasVisit = true;
+                listing.visits = listing.visits + 1;
+            }
+        })
+        if (!listingHasVisit) {
+            // Listing not visited before
+            const listingVisited = {id: LISTING_ID, name: listingName, visits: 1};
+            listingHistory.push(listingVisited);
+        }
+        // TODO: Sort listing history by number of visits descending
+        localStorage.setItem('listingHistory', JSON.stringify(listingHistory))
+    } else {
+        const listingVisited = {id: LISTING_ID, name: listingName, visits: 1};
+        listingHistory = [listingVisited];
+        localStorage.setItem('listingHistory', JSON.stringify(listingHistory))
+    }
+
 })();

@@ -11,7 +11,6 @@ import {Router} from "express";
 import validation from "../../helpers/input-validations.js";
 import {serverSchemas} from "../../helpers/object-schemas.js";
 import {userData} from '../../data/index.js'
-import {ROLES} from "../../helpers/constants.js";
 
 const loginRouter = Router(); // Creates a loginRouter object
 

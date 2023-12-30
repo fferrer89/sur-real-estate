@@ -7,8 +7,6 @@ import validation from "../helpers/input-validations.js";
 import {DatabaseError, DocumentNotFoundError, OnsiteVisitError} from "./custom-error-classes.js";
 import {listingData} from "./index.js";
 
-const listingsCollection = await listings();
-
 const listingVisitorData = {
     async getListingVisits(listingId = validation.isRequired('listingId')) {
         // 0: Retrieve data to be added/queried/updated to/from the database

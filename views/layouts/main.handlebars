@@ -28,21 +28,21 @@
             {{#if loggedUserInfo}}
                 {{#with loggedUserInfo}}
                     <li>
-                        <!--Hide Log Out option when visitor is not authenticated-->
+                        <!--TODO: Hide Log Out option when visitor is not authenticated-->
                         <a href="/">{{username}} - Role: {{role}}</a>
                     </li>
                 {{/with}}
                 <li>
-                    <!--Hide Log Out option when visitor is not authenticated-->
+                    <!--TODO: Hide Log Out option when visitor is not authenticated-->
                     <a href="/logout">Log Out</a>
                 </li>
             {{else}}
                 <li>
-                    <!--Hide Sign Up option when visitor is authenticated-->
+                    <!--TODO: Hide Sign Up option when visitor is authenticated-->
                     <a href="/signup">Sign Up</a>
                 </li>
                 <li>
-                    <!--Hide Log In option when visitor is authenticated-->
+                    <!--TODO: Hide Log In option when visitor is authenticated-->
                     <a href="/login">Log In</a>
                 </li>
             {{/if}}

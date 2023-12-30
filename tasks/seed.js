@@ -1,7 +1,5 @@
 import {dbConnection, closeConnection} from '../config/mongoConnection.js';
 import {listingData, messageData, userData, listingVisitorData} from '../data/index.js'
-import validation from "../helpers/input-validations.js";
-import {ObjectId} from "mongodb";
 
 const db = await dbConnection();
 await db.dropDatabase();
@@ -14,7 +12,8 @@ const realtorUser = {
     username: 'realtor',
     password: 'Test123$'
 }
-const realtorId = await userData.signup(realtorUser.role, realtorUser.email, realtorUser.username, realtorUser.password);
+const realtorId = await userData.signup(realtorUser.role, realtorUser.email, realtorUser.username,
+    realtorUser.password, 'realtorDocumentation');
 console.log('Realtor Id: ' + realtorId);
 
 const generalUser = {
@@ -23,7 +22,8 @@ const generalUser = {
     username: 'general',
     password: 'Test123$'
 }
-const generalUserId = await userData.signup(generalUser.role, generalUser.email, generalUser.username, generalUser.password);
+const generalUserId = await userData.signup(generalUser.role, generalUser.email, generalUser.username,
+    generalUser.password, 'generalUserDocumentation');
 console.log('Realtor Id: ' + generalUserId);
 
 

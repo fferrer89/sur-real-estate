@@ -98,6 +98,35 @@ app.use((req, res, next) => {
     next();
 });
 
+// TODO: Add middlewares
+// Middleware to GET '/listings/new' AND POST '/listings'
+// Route accessibility: Authentication & Authorization needed. Route protected to authenticated visitors with a role of "realtor"
+
+// Middleware to POST '/listings/:listingId/comments'
+// Route accessibility: Authentication needed. Route protected to authenticated visitors
+
+// POST request to http://localhost:3000/listings/:listingId/messages
+// Route accessibility: Authentication needed. Route protected to authenticated visitors
+
+// POST request to http://localhost:3000/listings/:listingId/deposits
+// Route accessibility: Authentication needed. Route protected to authenticated visitors. Once a listing has a deposit,
+// prevent all users from making more deposits.
+
+// POST request to http://localhost:3000/listings/:listingId/visits
+// Route accessibility: Authentication needed. Route protected to authenticated visitors.
+
+// POST request to http://localhost:3000/listings/:listingId/messages/:messageId
+// Route accessibility: Authentication needed. Route protected to authenticated visitors
+
+// Middleware to '/signup'
+// GET request to http://localhost:3000/signup
+// An authenticated user should not ever see the sign-up screen.
+
+// Middleware to '/login'
+// GET request to http://localhost:3000/login
+// An authenticated user should not ever see the login screen.
+
+
 app.engine('handlebars',
     handlebars.engine({
       defaultLayout: 'main'

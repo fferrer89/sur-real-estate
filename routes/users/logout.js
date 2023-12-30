@@ -1,5 +1,4 @@
 import {Router} from "express";
-import {ROLES} from "../../helpers/constants.js";
 
 const logoutRouter = Router(); // Creates a listingRouter object
 /**
@@ -8,15 +7,17 @@ const logoutRouter = Router(); // Creates a listingRouter object
  *
  */
 logoutRouter.route('/').get(async (req, res) => {
-    req.session.destroy(); // Destroys the session and unsets the req.session property
+    if (req.session) {
+        req.session.destroy(); // Destroys the session and unsets the req.session property
 
-    // Setting res locals, which are variables that are accessible in the view html templates rendered by the
-    // handlebars view engine using the res.render() method.
-    delete res.locals.isRealtor;
-    delete res.locals.isGeneral;
-    delete res.locals.loggedUserInfo;
+        // Setting res locals, which are variables that are accessible in the view html templates rendered by the
+        // handlebars view engine using the res.render() method.
+        delete res.locals.isRealtor;
+        delete res.locals.isGeneral;
+        delete res.locals.loggedUserInfo;
 
-    return res.redirect('/'); // Redirects to home page using a 302 "Found" status code
+        return res.redirect('/'); // Redirects to home page using a 302 "Found" status code
+    }
 });
 
 export default logoutRouter;

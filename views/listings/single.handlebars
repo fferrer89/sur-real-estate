@@ -19,7 +19,6 @@
                 </address>
             {{/with}}
         </article>
-        <!--Dashboard with info here-->
     </div>
     <aside>
         <section id="deposit">
@@ -75,8 +74,6 @@
                 <h2>Comments</h2>
                 <p class="side-comment"><small>(Share a comment about this property with other users)</small></p>
             </hgroup>
-            <!--Use Handlebars!: If user is authenticated, display the form and the comments. Otherwise, display the comments and a login link with message that "user needs to be registered to post comments"-->
-            <!--            The form is only displayed for authenticated users!-->
             {{#with listing}}
                 <div id="comments-list">
                     {{#if comments}}
@@ -98,10 +95,8 @@
                 <input type="text" name="listingId" id="listingId" hidden value={{listing._id}}>
                 <button type="submit">New Comment</button>
             </form>
-            {{!--            {{#unless loggedUserInfo}}--}}
             {{#unless loggedUserInfo}}
                 <a href="/login" class="login-message">Login to enable posting a comment</a>
-            {{!--            {{/unless}}--}}
             {{/unless}}
         </section>
         <section id="messages">
@@ -110,7 +105,6 @@
                 <p class="side-comment"><small>(Send a private message to the listing broker for more
                     information)</small></p>
             </hgroup>
-            {{!--            {{#if loggedUserInfo}}--}}
             {{#if loggedUserInfo}}
                 {{#if messages}}
                     {{#each messages}}
@@ -143,10 +137,8 @@
                            placeholder="Send message to listing realtor" required>
                     <button type="submit">New Message</button>
                 </form>
-            {{!--             {{else}}--}}
             {{else}}
                 <a href="/login" class="login-message">Login to communicate with the realtor</a>
-            {{!--            {{/if}}--}}
             {{/if}}
         </section>
     </aside>

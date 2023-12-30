@@ -66,6 +66,31 @@
         })
     }
 
+    // Listing history
+    let listingHistorySection = document.querySelector('#listingHistorySection');
+    let listingHistory =  localStorage.getItem('listingHistory');
+    // listingHistory ->  [{id: '657786efe400c2dd593621ae', name: 'Broadwarey Av', visits: 4}, {id: '657786efe400c2dd593621ae', name: 'Broadwarey Av', visits: 4}];
+    if (listingHistory) {
+        const historyText = document.createElement('p');
+        historyText.textContent = 'Listings History';
+        listingHistorySection.append(historyText);
+        // there is a history of listing visits
+        // Create an ordered list of anchor for listings
+        const ul = document.createElement('ol');
+        listingHistorySection.append(ul);
+
+        let li, a;
+        listingHistory = JSON.parse(listingHistory);
+        listingHistory.forEach((listing) => {
+            li = document.createElement('li');
+            a = document.createElement('a');
+            a.href = `/listings/${listing.id}`
+            a.textContent = listing.name;
+            li.append(a);
+            ul.append(li);
+        })
+    }
+
     /**
      * Load the Maps JavaScript API by adding the inline bootstrap loader to your application code
      */
