@@ -12,7 +12,7 @@ import bcrypt from 'bcrypt';
 import validation from "../helpers/input-validations.js";
 import {dbSchemas} from "../helpers/object-schemas.js";
 import {DatabaseError, DocumentNotFoundError} from "./custom-error-classes.js";
-import {COLLECTION_NAMES, listings, users} from "../config/mongoCollections.js";
+import {COLLECTION_NAMES, users} from "../config/mongoCollections.js";
 import {ObjectId} from "mongodb";
 
 /**
@@ -26,13 +26,15 @@ const userData = {
     async signup(role = validation.isRequired('role'),
                  email = validation.isRequired('email'),
                  username = validation.isRequired('username'),
-                 password = validation.isRequired('password')) {
+                 password = validation.isRequired('password'),
+                 documentation = validation.isRequired('documentation')) {
         // 0: Retrieve data to be added/queried/updated to/from the database
         let user = {
             role,
             email,
             username,
             password,
+            documentation
         };
         // 1: Validate that data is in the correct format and follow the schema
         user = validation.object('user', user, dbSchemas.signupUser);
@@ -42,9 +44,6 @@ const userData = {
             // Email address is not unique, so throw an error
             throw new DatabaseError(`Users collection does not allow duplicate emails`, COLLECTION_NAMES.USERS);
         }
-
-        // TODO: The below line must be deleted. Just added for debugging purposes
-        user.passwordToDelete = user.password;
 
         // Encrypt the passport
         user.password = await bcrypt.hash(password, SALT_ROUNDS);

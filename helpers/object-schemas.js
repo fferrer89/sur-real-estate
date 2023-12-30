@@ -42,8 +42,8 @@ export const dbSchemas = {
         role: {type: TYPES.ROLE, isRequired: true},
         email: {type: TYPES.EMAIL, isRequired: true},
         username: {type: TYPES.USERNAME, isRequired: true},
-        password: {type: TYPES.PASSWORD, isRequired: true}
-        // TODO: Add check for "file" field
+        password: {type: TYPES.PASSWORD, isRequired: true},
+        documentation: {type: TYPES.STRING, isRequired: true}
     }
 }
 export const serverSchemas = {
@@ -76,8 +76,7 @@ export const serverSchemas = {
         username: {type: TYPES.USERNAME, isRequired: true},
         password: {type: TYPES.PASSWORD, isRequired: true},
         confirmPassword: {type: TYPES.PASSWORD, isRequired: true},
-        file: {type: TYPES.STRING, isRequired: true},
-        // TODO: Add check for "file" field
+        documentation: {type: TYPES.STRING, isRequired: true},
     },
     loginPostForm: {
         email: {type: TYPES.EMAIL, isRequired: true},

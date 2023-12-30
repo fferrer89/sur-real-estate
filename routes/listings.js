@@ -73,7 +73,7 @@ const imageStorage = multer.diskStorage({
  * to handle file uploads.
  *
  */
-const imageUpload = multer({
+export const imageUpload = multer({
     storage: imageStorage,
     limits: {
         fileSize: 20000000 // 20 MB (1000000 Bytes = 1 MB)
@@ -82,43 +82,6 @@ const imageUpload = multer({
 
 const listingRouter = Router(); // Creates a listingRouter object
 
-/*
-// Example of router using middleware functions. This approach re-uses the single /users/:user_id path and adds handlers for various HTTP methods.
-const router = express.Router()
-
-router.param('user_id', function (req, res, next, id) {
-  // sample user, would actually fetch from DB, etc...
-  req.user = {id: id, name: 'TJ'};
-  next();
-})
-
-router.route('/users/:user_id')
-  .all(function (req, res, next) {
-    // middleware that runs for all HTTP verbs first. Think of it as route specific middleware!
-    next();
-  })
-  .get(function (req, res, next) {
-    // middleware that runs for get() requests to the '/users/:userId' path
-    next();
-  })
-  .get(async (req, res) => {
-    res.json(req.user);
-  })
-  .put(async (req, res) => {
-    // just an example of maybe updating the user
-    req.user.name = req.params.name;
-    // save user ... etc
-    res.json(req.user);
-  })
-  .post(function (req, res, next) {
-   // middleware
-    next(new Error('not implemented'));
-  })
-  .delete(function (req, res, next) {
-  // middleware
-    next(new Error('not implemented'));
-  })
- */
 listingRouter.route('/')
     /**
      * Route that receives posts requests from http://localhost:3000/listings, which receives the Form data filled
@@ -232,30 +195,12 @@ listingRouter.route('/new')
 
 
 
-/**
- * Only requests to /listings/:listingId/messages/* will be sent to the listingRouter "router". This will only be invoked if the path starts
- * with /listings/:listingId/messages from the mount point (http://localhost:3000/listings/:listingId/messages)
- *
- */
-
-/**
- * Only requests to /listings/:listingId/comments/* will be sent to the listingRouter "router". This will only be invoked if the path starts
- * with /listings/:listingId/comments from the mount point (http://localhost:3000/listings/:listingId/comments)
- *
- * Route accessibility: Authentication needed. Route protected to authenticated visitors
- *
- */
-
 listingRouter.param('listingId', async (req, res, next, id) => {
-    // try to get the user details from the User model and attach it to the request object
-    // TODO: Add error handling to getListing(id) call. Not sure how to add error handling to a middleware function!
-    // try {
-    //     id = validation.bsonObjectId(id, 'listingId');
-    //     // Validate that the a listing with id 'listingId' exists in the database, and throw and error if if does not
-    // } catch (e) {
-    //     return res.status(400).json({error: e.message});
-    // }
-    req.listing = await listingData.getListing(id);
+    try {
+        req.listing = await listingData.getListing(id);
+    } catch (e) {
+        return res.status(400).json({error: e.message});
+    }
     // Retrieve the listing visit
     if (req.listing.visits &&  req.session.user) {
         req.listingVisit = req.listing.visits.find((visit) => {
@@ -268,7 +213,6 @@ listingRouter.param('listingId', async (req, res, next, id) => {
                 {dateStyle: "medium",timeStyle: "short"})
         }
     }
-    // todo: Check how/if this is called when making request to: /:listingId/messages/:messageId
     next();
 })
 
@@ -278,10 +222,6 @@ listingRouter.param('listingId', async (req, res, next, id) => {
  * Route accessibility: Open to all visitors
  */
 listingRouter.route('/:listingId')
-    .all((req, res, next) => {
-        // Runs for all HTTP verbs first. Think of this as a route-specific middleware
-        next();
-    })
     /**
      * Route that receives get requests from http://localhost:3000/:listingId endpoint URL, which renders to the
      * user/browser a web page containing all the information (list price, square feet, picture, ...) of a listing with
@@ -360,7 +300,6 @@ listingRouter.route('/:listingId/comments')
      *
      * Route accessibility: Authentication needed. Route protected to authenticated visitors
      *
-     * TODO: Change this method to PUT or PATCH by adding a middleware  (as we are updating a listing object, by adding a comment to it)
      *
      * POST request to http://localhost:3000/listings/:listingId/comments
      */
@@ -436,7 +375,6 @@ listingRouter.route('/:listingId/deposits')
      * Route accessibility: Authentication needed. Route protected to authenticated visitors. Once a listing has a deposit,
      * prevent all users from making more deposits.
      *
-     * TODO: Change this method to PUT or PATCH by adding a middleware  (as we are updating a listing object, by adding a deposit to it)
      *
      * POST request to http://localhost:3000/listings/:listingId/deposits
      */
@@ -466,13 +404,11 @@ listingRouter.route('/:listingId/visits')
     /**
      * Handles the data received from the form to post a new deposit
      *
-     * Route accessibility: Authentication needed. Route protected to authenticated visitors.
-     * TODO: Once a listing has an, onsite visit, prevent other users to scheduling onsite visits in the same time frame
+     * TODO: Route accessibility: Authentication needed. Route protected to authenticated visitors.
+     * - Once a listing has an, onsite visit, prevent other users to scheduling onsite visits in the same time frame
      *
      * TODO: Visits are 30 minutes long
      * TODO: If the listing has a deposit, dont allow booking onsite visits.
-     *
-     * TODO: Change this method to PUT or PATCH by adding a middleware  (as we are updating a listing object, by adding a deposit to it)
      *
      * POST request to http://localhost:3000/listings/:listingId/visits
      */

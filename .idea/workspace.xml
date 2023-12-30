@@ -6,9 +6,51 @@
   <component name="ChangeListManager">
     <list default="true" id="05f8c291-3590-4a4f-aa0f-cc46588bb02e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/images.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/listing-visitor.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/listing-visitor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/listings.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/listings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/data/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/object-schemas.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/object-schemas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/scripts/get-listings-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/scripts/get-listings-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/scripts/post-listing-form.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/scripts/single-listing.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/scripts/single-listing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701303029024-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701547247648-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701614047641-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701618470652-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701623159619-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701698644781-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701706784284-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701706996672-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1701988384549-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702341258631-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702341321328-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702341569388-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702341708905-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702341779263-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702341921209-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702346433466-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/1702346541265-test-photo-house.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/listings.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/listings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users/logout.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users/logout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users/signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users/signup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users/users.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/seed.js" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/seed.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/attendees.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/events.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/listings.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/users.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/about.handlebars" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/contact.handlebars" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/home.handlebars" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/layouts/main.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/main.handlebars" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/listings/index.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/listings/index.handlebars" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/listings/single.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/listings/single.handlebars" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/users/signup.handlebars" beforeDir="false" afterPath="$PROJECT_DIR$/views/users/signup.handlebars" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +206,11 @@
       <workItem from="1702510660397" duration="2920000" />
       <workItem from="1702586573498" duration="1114000" />
       <workItem from="1702590987551" duration="741000" />
-      <workItem from="1702675524918" duration="2556000" />
+      <workItem from="1702675524918" duration="10258000" />
+      <workItem from="1702728764798" duration="19311000" />
+      <workItem from="1702819599819" duration="5459000" />
+      <workItem from="1703016941621" duration="602000" />
+      <workItem from="1703670077506" duration="3324000" />
     </task>
     <servers />
   </component>
@@ -224,16 +270,5 @@
     <option name="CODE_SMELLS_PROFILE" value="Project Default" />
     <MESSAGE value="home-search working with front end valiations" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/listings.js</url>
-          <line>262</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
